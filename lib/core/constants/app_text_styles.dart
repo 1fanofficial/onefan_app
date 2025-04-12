@@ -17,6 +17,7 @@ class AppTextStyles {
 
   static const letterSpacing = -0.5;
 
+  // Rajdhani Styles
   static final rajdhaniBoldXs = GoogleFonts.rajdhani(fontSize: xsFontSize, fontWeight: bold, letterSpacing: letterSpacing);
   static final rajdhaniBoldSm = GoogleFonts.rajdhani(fontSize: smFontSize, fontWeight: bold, letterSpacing: letterSpacing);
   static final rajdhaniBoldMd = GoogleFonts.rajdhani(fontSize: mdFontSize, fontWeight: bold, letterSpacing: letterSpacing);
@@ -52,16 +53,39 @@ class AppTextStyles {
   static final rajdhaniLightXl = GoogleFonts.rajdhani(fontSize: xlFontSize, fontWeight: light, letterSpacing: letterSpacing);
   static final rajdhaniLightXxl = GoogleFonts.rajdhani(fontSize: xxlFontSize, fontWeight: light, letterSpacing: letterSpacing);
 
-  static final orbitronBoldLg = GoogleFonts.orbitron(fontSize: lgFontSize, fontWeight: bold, letterSpacing: letterSpacing);
-  static final orbitronBoldXl = GoogleFonts.orbitron(fontSize: xlFontSize, fontWeight: bold, letterSpacing: letterSpacing);
-  static final orbitronSemiBoldMd = GoogleFonts.orbitron(fontSize: mdFontSize, fontWeight: semibold, letterSpacing: letterSpacing);
-  static final orbitronMediumMd = GoogleFonts.orbitron(fontSize: mdFontSize, fontWeight: medium, letterSpacing: letterSpacing);
-  static final orbitronNormalMd = GoogleFonts.orbitron(fontSize: mdFontSize, fontWeight: normal, letterSpacing: letterSpacing);
-  static final orbitronLightMd = GoogleFonts.orbitron(fontSize: mdFontSize, fontWeight: light, letterSpacing: letterSpacing);
-
+  // Inter Styles
+  static final interBoldXs = GoogleFonts.inter(fontSize: xsFontSize, fontWeight: bold, letterSpacing: letterSpacing);
+  static final interBoldSm = GoogleFonts.inter(fontSize: smFontSize, fontWeight: bold, letterSpacing: letterSpacing);
   static final interBoldMd = GoogleFonts.inter(fontSize: mdFontSize, fontWeight: bold, letterSpacing: letterSpacing);
+  static final interBoldLg = GoogleFonts.inter(fontSize: lgFontSize, fontWeight: bold, letterSpacing: letterSpacing);
+  static final interBoldXl = GoogleFonts.inter(fontSize: xlFontSize, fontWeight: bold, letterSpacing: letterSpacing);
+  static final interBoldXxl = GoogleFonts.inter(fontSize: xxlFontSize, fontWeight: bold, letterSpacing: letterSpacing);
+
+  static final interSemiBoldXs = GoogleFonts.inter(fontSize: xsFontSize, fontWeight: semibold, letterSpacing: letterSpacing);
+  static final interSemiBoldSm = GoogleFonts.inter(fontSize: smFontSize, fontWeight: semibold, letterSpacing: letterSpacing);
   static final interSemiBoldMd = GoogleFonts.inter(fontSize: mdFontSize, fontWeight: semibold, letterSpacing: letterSpacing);
+  static final interSemiBoldLg = GoogleFonts.inter(fontSize: lgFontSize, fontWeight: semibold, letterSpacing: letterSpacing);
+  static final interSemiBoldXl = GoogleFonts.inter(fontSize: xlFontSize, fontWeight: semibold, letterSpacing: letterSpacing);
+  static final interSemiBoldXxl = GoogleFonts.inter(fontSize: xxlFontSize, fontWeight: semibold, letterSpacing: letterSpacing);
+
+  static final interMediumXs = GoogleFonts.inter(fontSize: xsFontSize, fontWeight: medium, letterSpacing: letterSpacing);
+  static final interMediumSm = GoogleFonts.inter(fontSize: smFontSize, fontWeight: medium, letterSpacing: letterSpacing);
   static final interMediumMd = GoogleFonts.inter(fontSize: mdFontSize, fontWeight: medium, letterSpacing: letterSpacing);
+  static final interMediumLg = GoogleFonts.inter(fontSize: lgFontSize, fontWeight: medium, letterSpacing: letterSpacing);
+  static final interMediumXl = GoogleFonts.inter(fontSize: xlFontSize, fontWeight: medium, letterSpacing: letterSpacing);
+  static final interMediumXxl = GoogleFonts.inter(fontSize: xxlFontSize, fontWeight: medium, letterSpacing: letterSpacing);
+
+  static final interNormalXs = GoogleFonts.inter(fontSize: xsFontSize, fontWeight: normal, letterSpacing: letterSpacing);
+  static final interNormalSm = GoogleFonts.inter(fontSize: smFontSize, fontWeight: normal, letterSpacing: letterSpacing);
   static final interNormalMd = GoogleFonts.inter(fontSize: mdFontSize, fontWeight: normal, letterSpacing: letterSpacing);
+  static final interNormalLg = GoogleFonts.inter(fontSize: lgFontSize, fontWeight: normal, letterSpacing: letterSpacing);
+  static final interNormalXl = GoogleFonts.inter(fontSize: xlFontSize, fontWeight: normal, letterSpacing: letterSpacing);
+  static final interNormalXxl = GoogleFonts.inter(fontSize: xxlFontSize, fontWeight: normal, letterSpacing: letterSpacing);
+
+  static final interLightXs = GoogleFonts.inter(fontSize: xsFontSize, fontWeight: light, letterSpacing: letterSpacing);
+  static final interLightSm = GoogleFonts.inter(fontSize: smFontSize, fontWeight: light, letterSpacing: letterSpacing);
   static final interLightMd = GoogleFonts.inter(fontSize: mdFontSize, fontWeight: light, letterSpacing: letterSpacing);
+  static final interLightLg = GoogleFonts.inter(fontSize: lgFontSize, fontWeight: light, letterSpacing: letterSpacing);
+  static final interLightXl = GoogleFonts.inter(fontSize: xlFontSize, fontWeight: light, letterSpacing: letterSpacing);
+  static final interLightXxl = GoogleFonts.inter(fontSize: xxlFontSize, fontWeight: light, letterSpacing: letterSpacing);
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:onefan_app/core/constants/app_theme.dart';
-import 'package:onefan_app/core/router/app_router.dart';
+import 'package:onefan_app/core/routing/app_router.dart';
 
 void main() {
   runApp(
@@ -20,6 +20,7 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
       routerConfig: AppRouter.router,
+      debugShowCheckedModeBanner: false,
     );
   }
 }
