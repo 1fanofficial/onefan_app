@@ -1,0 +1,11 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "1FAN - Dev",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": ["--dart-define-from-file=devconfig.json"]
+    }
+  ]
+}

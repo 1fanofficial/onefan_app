@@ -1,0 +1,6 @@
+{
+  "APP_NAME": "1FAN - Dev",
+  "APP_SUFFIX": ".dev",
+  "BASE_URL": "https://api-onefan-dev.com",
+  "ENVIRONMENT": "dev"
+}
