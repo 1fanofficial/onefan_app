@@ -40,8 +40,8 @@ class _SplashScreenState extends State<SplashScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text("Lights Out to ", style: AppTextStyles.rajdhaniBoldXxl.copyWith(color: AppColors.secondary)),
-                Text("1", style: AppTextStyles.rajdhaniBoldXxl.copyWith(color: AppColors.primary, fontWeight: FontWeight.w900)),
-                Text("FAN!", style: AppTextStyles.rajdhaniBoldXxl.copyWith(color: AppColors.secondary, fontWeight: FontWeight.w900)),
+                Text("1", style: AppTextStyles.rajdhaniBoldXxl.copyWith(color: AppColors.secondary, fontWeight: FontWeight.w900)),
+                Text("FAN!", style: AppTextStyles.rajdhaniBoldXxl.copyWith(color: AppColors.primary, fontWeight: FontWeight.w900)),
               ],
             ),
             const SizedBox(height: 20),
