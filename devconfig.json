@@ -2,5 +2,7 @@
   "APP_NAME": "1FAN - Dev",
   "APP_SUFFIX": ".dev",
   "BASE_URL": "https://api-onefan-dev.com",
-  "ENVIRONMENT": "dev"
+  "ENVIRONMENT": "dev",
+  "SUPABASE_URL": "https://ywmtbodddiyzyndtcaif.supabase.co",
+  "ANNON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3bXRib2RkZGl5enluZHRjYWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQzMDEzNDcsImV4cCI6MjA1OTg3NzM0N30.DUdmQRv0qkETvp4oQ_vdL8_kRloOeiiV1rfOJSlk7Xs"
 }

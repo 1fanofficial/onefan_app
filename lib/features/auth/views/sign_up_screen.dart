@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:onefan_app/core/constants/app_colors.dart';
 import 'package:onefan_app/core/constants/app_text_styles.dart';
 import 'package:onefan_app/core/routing/route_name.dart';
+import 'package:onefan_app/features/auth/controller/auth_controller.dart';
 import 'package:onefan_app/features/auth/views/widgets/custom_filled_button.dart';
 
 enum SignUpState { createUser, verifyUser, userDetails }
@@ -73,6 +74,64 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     if (picked != null) {
       _dob = picked;
       _dobController.text = "${picked.day.toString().padLeft(2, "0")}/${picked.month.toString().padLeft(2, "0")}/${picked.year}";
+    }
+  }
+
+  Future<void> onSignUp() async {
+    if (_formKey.currentState!.validate()) {
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
+
+      bool isSuccess = await ref.read(authControllerProvider.notifier).signUp(email: email, password: password, context: context);
+      if (isSuccess) {
+        await showDialog(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Text(
+              "Verification Email Sent",
+              style: AppTextStyles.rajdhaniBoldLg.copyWith(fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+            content: Text(
+              "We’ve sent a one-time password (OTP) to your email. Please check your inbox and enter the OTP to verify your account.",
+              textAlign: TextAlign.center,
+              style: AppTextStyles.interSemiBoldMd,
+            ),
+            actionsPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            actionsAlignment: MainAxisAlignment.end,
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(dialogContext);
+                },
+                child: Text(
+                  "Okay",
+                  style: AppTextStyles.interBoldLg,
+                ),
+              ),
+            ],
+          ),
+        );
+
+        _signUpState.value = SignUpState.verifyUser;
+      }
+    }
+  }
+
+  Future<void> onVerifyOTP() async {
+    FocusScope.of(context).unfocus();
+
+    if (_formKey.currentState!.validate()) {
+      final email = _emailController.text.trim();
+      final otp = _otpController.text.trim();
+
+      bool isSuccess = await ref.read(authControllerProvider.notifier).verifySignUp(email: email, otp: otp, context: context);
+      if (isSuccess) {
+        _signUpState.value = SignUpState.userDetails;
+      }
     }
   }
 
@@ -185,16 +244,21 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         const SizedBox(height: 20),
 
         // Confirm Password
-        TextFormField(
-          controller: _confirmPasswordController,
-          obscureText: true,
-          style: AppTextStyles.interNormalMd.copyWith(color: AppColors.lightSurface),
-          decoration: InputDecoration(
-            labelText: "Confirm Password",
-            labelStyle: AppTextStyles.interNormalMd.copyWith(color: AppColors.lightSurface),
-            border: const OutlineInputBorder(),
-          ),
-          validator: (val) => val == _passwordController.text ? null : "Passwords don't match",
+        ValueListenableBuilder(
+          valueListenable: _isObscure,
+          builder: (context, isObscure, _) {
+            return TextFormField(
+              controller: _confirmPasswordController,
+              obscureText: isObscure,
+              style: AppTextStyles.interNormalMd.copyWith(color: AppColors.lightSurface),
+              decoration: InputDecoration(
+                labelText: "Confirm Password",
+                labelStyle: AppTextStyles.interNormalMd.copyWith(color: AppColors.lightSurface),
+                border: const OutlineInputBorder(),
+              ),
+              validator: (val) => val == _passwordController.text ? null : "Passwords don't match",
+            );
+          },
         ),
 
         ValueListenableBuilder<bool>(
@@ -218,13 +282,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           },
         ),
         const SizedBox(height: 20),
-
-        CustomFilledButton(
-          title: 'Sign Up',
-          onTap: () {
-            _signUpState.value = SignUpState.verifyUser;
-          },
-        ),
+        ref.watch(authControllerProvider).when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              data: (_) => CustomFilledButton(title: 'Sign Up', onTap: onSignUp),
+              error: (e, st) {
+                return CustomFilledButton(title: 'Sign Up', onTap: onSignUp);
+              },
+            ),
 
         const SizedBox(height: 20),
         Row(
@@ -271,15 +335,22 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
             border: const OutlineInputBorder(),
           ),
           maxLength: 6,
-          validator: (val) => val != null && val.length != 6 ? null : "OTP is invalid",
+          onChanged: (value) {
+            if (value.contains(RegExp(r'[^0-9]'))) {
+              _otpController.text = value.replaceAll(RegExp(r'[^0-9]'), '');
+              _otpController.selection = TextSelection.fromPosition(
+                TextPosition(offset: _otpController.text.length),
+              );
+            }
+          },
+          validator: (val) => val != null && val.length != 6 ? "Invalid OTP" : null,
         ),
         const SizedBox(height: 20),
-        CustomFilledButton(
-          title: 'Verfiy',
-          onTap: () {
-            _signUpState.value = SignUpState.userDetails;
-          },
-        ),
+        ref.watch(authControllerProvider).when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              data: (_) => CustomFilledButton(title: 'Verfiy', onTap: onVerifyOTP),
+              error: (e, st) => CustomFilledButton(title: 'Verfiy', onTap: onVerifyOTP),
+            ),
       ],
     );
   }
