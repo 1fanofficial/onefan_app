@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:onefan_app/core/routing/route_name.dart';
 import 'package:onefan_app/features/auth/auth_route_provider.dart';
+import 'package:onefan_app/features/root/root_route_provider.dart';
 import 'package:onefan_app/features/splash/splash_screen.dart';
 
 class AppRouter {
@@ -17,6 +18,7 @@ class AppRouter {
         builder: (context, state) => const SplashScreen(),
       ),
       ...AuthRouteProvider.routes,
+      RootRouteProvider.route,
     ],
     errorBuilder: (context, state) => const Scaffold(
       body: Center(

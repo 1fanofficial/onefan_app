@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:onefan_app/core/constants/app_colors.dart';
 import 'package:onefan_app/core/constants/app_text_styles.dart';
 import 'package:onefan_app/core/routing/route_name.dart';
+import 'package:onefan_app/features/auth/controller/auth_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:logger/logger.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -12,13 +15,28 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final log = Logger();
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(const Duration(seconds: 2), () {
-      context.goNamed(RouteName.signin);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      checkLogin(context);
     });
+  }
+
+  Future<void> checkLogin(BuildContext context) async {
+    await Future.delayed(const Duration(seconds: 2));
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString(AuthController.tokenKey);
+      if (token != null && token.isNotEmpty) {
+        context.goNamed(RouteName.home);
+      } else {
+        context.goNamed(RouteName.signin);
+      }
+    } catch (e, st) {
+      log.e("Something went wrong", error: e, stackTrace: st);
+    }
   }
 
   @override

@@ -11,7 +11,7 @@ part 'auth_controller.g.dart';
 
 @riverpod
 class AuthController extends _$AuthController {
-  static const _tokenKey = "bearer";
+  static const tokenKey = "bearer";
 
   @override
   FutureOr<void> build() {}
@@ -40,7 +40,7 @@ class AuthController extends _$AuthController {
 
       final session = response.session;
       if (session != null) {
-        AppPreferences().setString(_tokenKey, session.accessToken);
+        AppPreferences().setString(tokenKey, session.accessToken);
       }
 
       state = const AsyncData(null);
@@ -57,7 +57,7 @@ class AuthController extends _$AuthController {
 
       final session = response.session;
       if (session != null) {
-        AppPreferences().setString(_tokenKey, session.accessToken);
+        AppPreferences().setString(tokenKey, session.accessToken);
       }
       state = const AsyncData(null);
       if (context.mounted) {
