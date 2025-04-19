@@ -3,10 +3,11 @@ import 'package:onefan_app/core/constants/app_colors.dart';
 import 'package:onefan_app/core/constants/app_text_styles.dart';
 
 class CustomFilledButton extends StatelessWidget {
-  const CustomFilledButton({super.key, required this.title, this.buttonColor, required this.onTap});
+  const CustomFilledButton({super.key, required this.title, this.buttonColor, required this.onTap, this.textColor});
 
   final String title;
   final Color? buttonColor;
+  final Color? textColor;
   final Function() onTap;
 
   @override
@@ -22,7 +23,7 @@ class CustomFilledButton extends StatelessWidget {
         ),
         child: Text(
           title,
-          style: AppTextStyles.rajdhaniBoldLg.copyWith(color: AppColors.lightSurface),
+          style: AppTextStyles.rajdhaniBoldLg.copyWith(color: textColor ?? AppColors.lightSurface),
         ),
       ),
     );

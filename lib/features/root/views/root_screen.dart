@@ -41,7 +41,7 @@ class _RootScreenState extends State<RootScreen> {
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
           BottomNavigationBarItem(icon: Icon(Icons.emoji_events_rounded), label: 'Contests'),
-          BottomNavigationBarItem(icon: Icon(Icons.calendar_month_rounded), label: 'Race Calendar'),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_month_rounded), label: 'Race'),
           BottomNavigationBarItem(icon: Icon(Icons.person_rounded), label: 'Profile'),
         ],
       ),

@@ -11,6 +11,7 @@ class RouteName {
 
   /// contests
   static const String contests = 'contests';
+  static const String rankDrivers = 'rankDrivers';
 
   /// race calendar
   static const String raceCalendar = 'raceCalendar';
