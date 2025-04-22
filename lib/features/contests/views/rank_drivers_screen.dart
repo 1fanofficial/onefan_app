@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:onefan_app/common_widgets/driver_card.dart';
 import 'package:onefan_app/core/constants/app_colors.dart';
 import 'package:onefan_app/core/constants/app_text_styles.dart';

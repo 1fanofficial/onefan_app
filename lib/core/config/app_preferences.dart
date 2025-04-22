@@ -1,4 +1,8 @@
+import 'dart:developer';
+
+import 'package:onefan_app/features/auth/service/auth_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AppPreferences {
   AppPreferences._internal();
@@ -40,5 +44,26 @@ class AppPreferences {
   bool containsKey(String key) {
     if (!isInitialized) return false;
     return _preferences!.containsKey(key);
+  }
+
+  Future<void> saveAuthData(Session session) async {
+    try {
+      if (!isInitialized) await init();
+      _preferences!.setString(AuthService.accessTokenKey, session.accessToken);
+      if (session.refreshToken != null) {
+        _preferences!.setString(AuthService.refreshTokenKey, session.refreshToken!);
+      }
+    } catch (e) {
+      log("Failed to save auth data $e");
+    }
+  }
+
+  Future<void> clearAuthData() async {
+    try {
+      if (!isInitialized) return;
+      _preferences!.clear();
+    } catch (e) {
+      log("Failed to clear auth data $e");
+    }
   }
 }

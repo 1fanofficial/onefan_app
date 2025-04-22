@@ -1,21 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:onefan_app/core/constants/app_colors.dart';
 import 'package:onefan_app/core/constants/app_text_styles.dart';
 import 'package:onefan_app/core/routing/route_name.dart';
+import 'package:onefan_app/features/auth/controller/auth_controller.dart';
 import 'package:onefan_app/features/auth/views/widgets/custom_filled_button.dart';
 
-class SignInScreen extends StatefulWidget {
+class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  ConsumerState<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignInScreenState extends ConsumerState<SignInScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  final ValueNotifier<bool> _isObscure = ValueNotifier<bool>(true);
+
+  Future<void> onSignIn() async {
+    FocusScope.of(context).unfocus();
+
+    if (_formKey.currentState!.validate()) {
+      final email = _emailController.text.trim();
+      final password = _passwordController.text.trim();
+
+      bool isSuccess = await ref.read(authControllerProvider.notifier).signIn(email: email, password: password, context: context);
+      if (isSuccess && context.mounted) {
+        context.goNamed(RouteName.home);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,20 +73,50 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(height: 20),
 
                 // Password
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  style: AppTextStyles.interNormalMd.copyWith(color: AppColors.lightSurface),
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    labelStyle: AppTextStyles.interNormalMd.copyWith(color: AppColors.lightSurface),
-                    border: const OutlineInputBorder(),
-                  ),
-                  validator: (val) => val != null && val.length >= 6 ? null : "Password too short",
+                ValueListenableBuilder(
+                    valueListenable: _isObscure,
+                    builder: (context, isObscure, _) {
+                      return TextFormField(
+                        controller: _passwordController,
+                        obscureText: isObscure,
+                        style: AppTextStyles.interNormalMd.copyWith(color: AppColors.lightSurface),
+                        decoration: InputDecoration(
+                          labelText: "Password",
+                          labelStyle: AppTextStyles.interNormalMd.copyWith(color: AppColors.lightSurface),
+                          border: const OutlineInputBorder(),
+                        ),
+                        validator: (val) => val != null && val.length >= 6 ? null : "Password too short",
+                      );
+                    }),
+                ValueListenableBuilder<bool>(
+                  valueListenable: _isObscure,
+                  builder: (context, isObscure, _) {
+                    return Row(
+                      children: [
+                        Checkbox(
+                          value: !isObscure,
+                          onChanged: (val) {
+                            _isObscure.value = !(val ?? false);
+                          },
+                          activeColor: AppColors.primary,
+                        ),
+                        Text(
+                          "Show Password",
+                          style: AppTextStyles.interNormalSm.copyWith(color: AppColors.darkText),
+                        ),
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
 
-                CustomFilledButton(title: "Sing In", onTap: () {}),
+                ref.watch(authControllerProvider).when(
+                      loading: () => const Center(child: CircularProgressIndicator()),
+                      data: (_) => CustomFilledButton(title: 'Sing In', onTap: onSignIn),
+                      error: (e, st) {
+                        return CustomFilledButton(title: 'Sign In', onTap: onSignIn);
+                      },
+                    ),
 
                 const SizedBox(height: 20),
                 Row(

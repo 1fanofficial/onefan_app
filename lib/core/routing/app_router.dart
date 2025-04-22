@@ -10,10 +10,10 @@ import 'package:onefan_app/features/root/root_route_provider.dart';
 import 'package:onefan_app/features/splash/splash_screen.dart';
 
 class AppRouter {
-  static final _rootNavigtorKey = GlobalKey<NavigatorState>();
+  static final rootNavigtorKey = GlobalKey<NavigatorState>();
 
   static final router = GoRouter(
-    navigatorKey: _rootNavigtorKey,
+    navigatorKey: rootNavigtorKey,
     initialLocation: '/splash',
     routes: [
       GoRoute(
