@@ -31,7 +31,7 @@ class UserProfileController extends _$UserProfileController {
       if (mounted) {
         state = AsyncError(e, st);
       }
-      rethrow;
+      return null;
     }
   }
 

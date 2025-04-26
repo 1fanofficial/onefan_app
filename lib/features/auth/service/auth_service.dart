@@ -34,6 +34,11 @@ class AuthService {
     return response;
   }
 
+  Future<ResendResponse> resendOTP(String email) async {
+    final respone = await _supabaseClient.auth.resend(type: OtpType.signup);
+    return respone;
+  }
+
   Future<void> signOut() async {
     await _supabaseClient.auth.signOut();
   }

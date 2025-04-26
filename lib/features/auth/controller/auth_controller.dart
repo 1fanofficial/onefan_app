@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:onefan_app/core/config/app_preferences.dart';
 import 'package:onefan_app/core/utils/common_functions.dart';
@@ -45,6 +46,7 @@ class AuthController extends _$AuthController {
       final session = response.session;
       if (session != null) {
         await AppPreferences().saveAuthData(session);
+        state = const AsyncData(null);
         return true;
       }
 
@@ -94,6 +96,26 @@ class AuthController extends _$AuthController {
       await authService.signOut();
       await AppPreferences().clearAuthData();
       state = const AsyncData(null);
+      return true;
+    } catch (e, st) {
+      state = AsyncError(e, st);
+      AuthApiException exception = e as AuthApiException;
+      if (context.mounted) {
+        CommonFunctions.showToastMessage(context: context, message: exception.message, messageType: MessageType.error);
+      }
+      return false;
+    }
+  }
+
+  Future<bool> resendOTP({required String email, required BuildContext context}) async {
+    state = const AsyncLoading();
+    try {
+      final authService = AuthService();
+      await authService.resendOTP(email);
+      state = const AsyncData(null);
+      if (context.mounted) {
+        CommonFunctions.showToastMessage(context: context, message: "OTP sent", messageType: MessageType.info);
+      }
       return true;
     } catch (e, st) {
       state = AsyncError(e, st);

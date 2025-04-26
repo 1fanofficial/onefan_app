@@ -7,12 +7,8 @@ class UserProfileService {
   final _dioClient = DioClient();
 
   Future<UserProfileResponse?> getUserDetails(String userId) async {
-    try {
-      Response response = await _dioClient.get(UserProfileEndpoints.getUser.replaceAll("{ID}", userId));
-      return UserProfileResponse.fromJson(response.data);
-    } catch (e) {
-      return null;
-    }
+    Response response = await _dioClient.get(UserProfileEndpoints.getUser.replaceAll("{ID}", userId));
+    return UserProfileResponse.fromJson(response.data);
   }
 
   Future<void> registerUser(Map<String, dynamic> payload) async {

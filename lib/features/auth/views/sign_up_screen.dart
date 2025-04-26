@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ import 'package:onefan_app/features/user_profile/controller/user_profile_control
 import 'package:onefan_app/features/user_profile/model/request/user_profile_request.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-enum SignUpState { createUser, verifyUser, userDetails }
+enum SignUpState { initial, userCreated, otpVerified, userDetailsCompleted }
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key, this.signUpState});
@@ -38,6 +39,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
   // verify user state
   final _otpController = TextEditingController();
+  final ValueNotifier<bool> _isResendOtpEnabled = ValueNotifier(false);
+  late Timer _timer;
+  int _counter = 60;
 
   // user details controller
   final _firstNameController = TextEditingController();
@@ -47,7 +51,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   Country _selectedCountry = const Country(name: "India", flag: "IN", code: "IN", dialCode: "91", nameTranslations: {}, minLength: 10, maxLength: 10);
   DateTime? _dob;
 
-  final ValueNotifier<SignUpState> _signUpState = ValueNotifier(SignUpState.createUser);
+  final ValueNotifier<SignUpState> _signUpState = ValueNotifier(SignUpState.initial);
   final ValueNotifier<bool> _isObscure = ValueNotifier<bool>(true);
   final _formKey = GlobalKey<FormState>();
 
@@ -56,6 +60,37 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     super.initState();
     if (widget.signUpState != null) {
       _signUpState.value = widget.signUpState!;
+      if (widget.signUpState == SignUpState.userCreated) {
+        _startResendOtpCounter();
+      }
+    }
+  }
+
+  void _startResendOtpCounter() {
+    _isResendOtpEnabled.value = false;
+    _counter = 60;
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_counter > 0) {
+        setState(() {
+          _counter--;
+        });
+      } else {
+        _isResendOtpEnabled.value = true;
+        _timer.cancel();
+      }
+    });
+  }
+
+  resendOTP() async {
+    try {
+      String? userJson = AppPreferences().getString('user');
+      User user = User.fromJson(jsonDecode(userJson!))!;
+      bool isOtpSent = await ref.read(authControllerProvider.notifier).resendOTP(email: user.email ?? "", context: context);
+      if (isOtpSent) {
+        _startResendOtpCounter();
+      }
+    } catch (e) {
+      CommonFunctions.showToastMessage(context: context, message: "Error while sending OTP");
     }
   }
 
@@ -135,6 +170,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
 
       bool isSuccess = await ref.read(authControllerProvider.notifier).signUp(email: email, password: password, context: context);
       if (isSuccess) {
+        _startResendOtpCounter();
         await showDialog(
           context: context,
           builder: (dialogContext) => AlertDialog(
@@ -167,7 +203,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           ),
         );
 
-        _signUpState.value = SignUpState.verifyUser;
+        _signUpState.value = SignUpState.userCreated;
       }
     }
   }
@@ -182,7 +218,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       bool isSuccess = await ref.read(authControllerProvider.notifier).verifyEmail(email: email, otp: otp, context: context);
       if (isSuccess) {
         await Future.delayed(const Duration(seconds: 1));
-        _signUpState.value = SignUpState.userDetails;
+        _signUpState.value = SignUpState.otpVerified;
       }
     }
   }
@@ -201,16 +237,17 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: MediaQuery.of(context).viewPadding.top),
+                // back button icon for OTP screen only
                 ValueListenableBuilder(
                   valueListenable: _signUpState,
                   builder: (context, signUpState, _) {
-                    return signUpState == SignUpState.verifyUser
+                    return signUpState == SignUpState.userCreated
                         ? Column(
                             children: [
                               const SizedBox(height: 20),
                               GestureDetector(
                                 onTap: () {
-                                  _signUpState.value = SignUpState.createUser;
+                                  _signUpState.value = SignUpState.initial;
                                 },
                                 child: const Icon(
                                   Icons.arrow_back_ios_new_rounded,
@@ -234,11 +271,11 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                   valueListenable: _signUpState,
                   builder: (context, signUpState, child) {
                     switch (signUpState) {
-                      case SignUpState.createUser:
+                      case SignUpState.initial:
                         return _buildCreateUserState();
-                      case SignUpState.verifyUser:
+                      case SignUpState.userCreated:
                         return _buildVerifyUserState();
-                      case SignUpState.userDetails:
+                      case SignUpState.otpVerified:
                         return _buildUserDetailsState();
                       default:
                         return _buildCreateUserState();
@@ -411,6 +448,35 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               data: (_) => CustomFilledButton(title: 'Verfiy', onTap: onVerifyOTP),
               error: (e, st) => CustomFilledButton(title: 'Verfiy', onTap: onVerifyOTP),
             ),
+        const SizedBox(height: 20),
+        Center(
+          child: ValueListenableBuilder(
+            valueListenable: _isResendOtpEnabled,
+            builder: (context, value, child) {
+              switch (value) {
+                case true:
+                  return InkWell(
+                    onTap: () {
+                      resendOTP();
+                    },
+                    child: Text(
+                      "Resend OTP",
+                      style: AppTextStyles.interBoldMd.copyWith(
+                        color: AppColors.info,
+                        decoration: TextDecoration.underline,
+                        decorationColor: AppColors.info,
+                      ),
+                    ),
+                  );
+                case false:
+                  return Text(
+                    "Resend OTP in 00:${_counter.toString().padLeft(2, '0')}",
+                    style: AppTextStyles.interBoldMd,
+                  );
+              }
+            },
+          ),
+        ),
       ],
     );
   }

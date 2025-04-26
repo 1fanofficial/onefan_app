@@ -33,15 +33,15 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   Future<void> checkLogin(BuildContext context) async {
     await Future.delayed(const Duration(seconds: 2));
     try {
+      // check if session is valid
       final isSessionInvalid = await AuthService.isSessionInvalid();
-
       if (isSessionInvalid) {
         context.goNamed(RouteName.signin);
         return;
       }
 
+      // fetch the user object
       final userJson = AppPreferences().getString("user");
-
       if (userJson == null) {
         context.goNamed(RouteName.signin);
         return;
@@ -49,16 +49,21 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
       final user = User.fromJson(jsonDecode(userJson));
       final userId = user?.id;
-
       if (userId == null || userId.isEmpty) {
         context.goNamed(RouteName.signin);
         return;
       }
 
-      final userProfileResponse = await ref.read(userProfileControllerProvider.notifier).getUserDetails(userId);
+      // if email not verified
+      if (user?.emailConfirmedAt == null) {
+        context.goNamed(RouteName.signup, extra: SignUpState.userCreated);
+        return;
+      }
 
+      // if profile not completed
+      final userProfileResponse = await ref.read(userProfileControllerProvider.notifier).getUserDetails(userId);
       if (userProfileResponse == null) {
-        context.goNamed(RouteName.signup, extra: SignUpState.userDetails);
+        context.goNamed(RouteName.signup, extra: SignUpState.otpVerified);
       } else {
         context.goNamed(RouteName.home);
       }

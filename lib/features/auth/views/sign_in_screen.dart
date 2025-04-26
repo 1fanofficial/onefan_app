@@ -54,10 +54,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             return;
           }
 
-          final userProfileResponse = await ref.read(userProfileControllerProvider.notifier).getUserDetails(userId);
+          // if email not verified
+          if (user?.emailConfirmedAt == null) {
+            context.goNamed(RouteName.signup, extra: SignUpState.userCreated);
+            return;
+          }
 
+          final userProfileResponse = await ref.read(userProfileControllerProvider.notifier).getUserDetails(userId);
           if (userProfileResponse == null) {
-            context.goNamed(RouteName.signup, extra: SignUpState.userDetails);
+            context.goNamed(RouteName.signup, extra: SignUpState.otpVerified);
           } else {
             context.goNamed(RouteName.home);
           }
