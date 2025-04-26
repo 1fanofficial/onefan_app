@@ -1,8 +1,8 @@
 {
-  "APP_NAME": "1FAN - Dev",
-  "APP_SUFFIX": ".dev",
-  "BASE_URL": "https://onefan-backend.onrender.com",
-  "ENVIRONMENT": "dev",
+  "APP_NAME": "1FAN - Local",
+  "APP_SUFFIX": ".local",
+  "BASE_URL": "http://192.168.31.85:8080",
+  "ENVIRONMENT": "local",
   "SUPABASE_URL": "https://ywmtbodddiyzyndtcaif.supabase.co",
   "ANNON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3bXRib2RkZGl5enluZHRjYWlmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUzNDYwODIsImV4cCI6MjA2MDkyMjA4Mn0.toYKpzytQ6cHNuNQ1GhO-vUfw50EQ_BBQRmA9gW_UvA"
 }

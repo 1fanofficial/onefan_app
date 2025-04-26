@@ -10,8 +10,8 @@ class DioClient {
 
   DioClient() {
     _dio.options.baseUrl = Env.baseUrl;
-    _dio.options.connectTimeout = const Duration(seconds: 30);
-    _dio.options.receiveTimeout = const Duration(seconds: 30);
+    _dio.options.connectTimeout = const Duration(seconds: 60);
+    _dio.options.receiveTimeout = const Duration(seconds: 60);
 
     _dio.interceptors.add(
       InterceptorsWrapper(
@@ -84,9 +84,8 @@ class DioClient {
       case DioExceptionType.receiveTimeout:
         throw Exception("Receive Timeout");
       case DioExceptionType.badResponse:
-        final statusCode = e.response?.statusCode ?? 0;
         final message = e.response?.data['message'] ?? 'Unknown Error';
-        throw Exception('[$statusCode] $message');
+        throw Exception(message);
       default:
         throw Exception("Network Error: ${e.message}");
     }

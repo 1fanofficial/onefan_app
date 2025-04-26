@@ -2,10 +2,24 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "1FAN - Dev",
+      "name": "1FAN - Release",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": ["--dart-define-from-file=devconfig.json", "--release"]
+    },
+
+    {
+      "name": "1FAN - Debug",
       "request": "launch",
       "type": "dart",
       "toolArgs": ["--dart-define-from-file=devconfig.json"]
+    },
+
+    {
+      "name": "1FAN - Local",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": ["--dart-define-from-file=localconfig.json"]
     }
   ]
 }
