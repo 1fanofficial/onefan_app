@@ -19,7 +19,11 @@ class AuthController extends _$AuthController {
     state = const AsyncLoading();
     try {
       final authService = AuthService();
-      await authService.signUpWithEmail(email, password);
+      final response = await authService.signUpWithEmail(email, password);
+      // in response session is null but it has a user object
+      if (response.session != null) {
+        AppPreferences().saveAuthData(response.session!);
+      }
       state = const AsyncData(null);
       return true;
     } catch (e, st) {
@@ -61,6 +65,7 @@ class AuthController extends _$AuthController {
     try {
       final authService = AuthService();
       final response = await authService.verifyEmail(email, otp);
+      // in response we receive access token, refresh token and user object
 
       final session = response.session;
       if (session != null) {

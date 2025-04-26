@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:onefan_app/features/auth/service/auth_service.dart';
@@ -49,10 +50,12 @@ class AppPreferences {
   Future<void> saveAuthData(Session session) async {
     try {
       if (!isInitialized) await init();
-      _preferences!.setString(AuthService.accessTokenKey, session.accessToken);
+      await _preferences!.setString(AuthService.accessTokenKey, session.accessToken);
       if (session.refreshToken != null) {
-        _preferences!.setString(AuthService.refreshTokenKey, session.refreshToken!);
+        await _preferences!.setString(AuthService.refreshTokenKey, session.refreshToken!);
       }
+      final userJson = jsonEncode(session.user.toJson());
+      await _preferences!.setString('user', userJson);
     } catch (e) {
       log("Failed to save auth data $e");
     }
@@ -61,7 +64,7 @@ class AppPreferences {
   Future<void> clearAuthData() async {
     try {
       if (!isInitialized) return;
-      _preferences!.clear();
+      await _preferences!.clear();
     } catch (e) {
       log("Failed to clear auth data $e");
     }

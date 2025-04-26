@@ -13,7 +13,10 @@ class AuthRouteProvider {
     GoRoute(
       path: '/signup',
       name: RouteName.signup,
-      builder: (context, state) => const SignUpScreen(),
+      builder: (context, state) {
+        SignUpState? signUpState = state.extra != null ? state.extra as SignUpState : null;
+        return SignUpScreen(signUpState: signUpState);
+      },
     ),
   ];
 }

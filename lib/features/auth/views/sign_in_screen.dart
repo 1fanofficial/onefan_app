@@ -1,11 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
+import 'package:onefan_app/core/config/app_preferences.dart';
 import 'package:onefan_app/core/constants/app_colors.dart';
 import 'package:onefan_app/core/constants/app_text_styles.dart';
 import 'package:onefan_app/core/routing/route_name.dart';
+import 'package:onefan_app/core/utils/common_functions.dart';
 import 'package:onefan_app/features/auth/controller/auth_controller.dart';
+import 'package:onefan_app/features/auth/views/sign_up_screen.dart';
 import 'package:onefan_app/features/auth/views/widgets/custom_filled_button.dart';
+import 'package:onefan_app/features/user_profile/controller/user_profile_controller.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
@@ -15,6 +23,7 @@ class SignInScreen extends ConsumerStatefulWidget {
 }
 
 class _SignInScreenState extends ConsumerState<SignInScreen> {
+  final log = Logger();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -27,9 +36,35 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       final email = _emailController.text.trim();
       final password = _passwordController.text.trim();
 
-      bool isSuccess = await ref.read(authControllerProvider.notifier).signIn(email: email, password: password, context: context);
-      if (isSuccess && context.mounted) {
-        context.goNamed(RouteName.home);
+      try {
+        bool isSuccess = await ref.read(authControllerProvider.notifier).signIn(email: email, password: password, context: context);
+        if (isSuccess && context.mounted) {
+          final userJson = AppPreferences().getString("user");
+
+          if (userJson == null) {
+            context.goNamed(RouteName.signin);
+            return;
+          }
+
+          final user = User.fromJson(jsonDecode(userJson));
+          final userId = user?.id;
+
+          if (userId == null || userId.isEmpty) {
+            context.goNamed(RouteName.signin);
+            return;
+          }
+
+          final userProfileResponse = await ref.read(userProfileControllerProvider.notifier).getUserDetails(userId);
+
+          if (userProfileResponse == null) {
+            context.goNamed(RouteName.signup, extra: SignUpState.userDetails);
+          } else {
+            context.goNamed(RouteName.home);
+          }
+        }
+      } catch (e, st) {
+        log.e("Something went wrong", error: e, stackTrace: st);
+        CommonFunctions.showToastMessage(context: context, message: e.toString());
       }
     }
   }
@@ -112,10 +147,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
                 ref.watch(authControllerProvider).when(
                       loading: () => const Center(child: CircularProgressIndicator()),
-                      data: (_) => CustomFilledButton(title: 'Sing In', onTap: onSignIn),
-                      error: (e, st) {
-                        return CustomFilledButton(title: 'Sign In', onTap: onSignIn);
-                      },
+                      data: (_) => CustomFilledButton(title: 'Sign In', onTap: onSignIn),
+                      error: (e, st) => CustomFilledButton(title: 'Sign In', onTap: onSignIn),
                     ),
 
                 const SizedBox(height: 20),

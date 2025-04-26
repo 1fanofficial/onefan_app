@@ -1,31 +1,36 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl_phone_field/countries.dart';
+import 'package:logger/logger.dart';
+import 'package:onefan_app/core/config/app_preferences.dart';
 import 'package:onefan_app/core/constants/app_colors.dart';
 import 'package:onefan_app/core/constants/app_text_styles.dart';
 import 'package:onefan_app/core/routing/route_name.dart';
+import 'package:onefan_app/core/utils/common_functions.dart';
 import 'package:onefan_app/features/auth/controller/auth_controller.dart';
 import 'package:onefan_app/features/auth/views/widgets/custom_filled_button.dart';
+import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:onefan_app/features/user_profile/controller/user_profile_controller.dart';
+import 'package:onefan_app/features/user_profile/model/request/user_profile_request.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 enum SignUpState { createUser, verifyUser, userDetails }
 
-enum Gender {
-  male("Male"),
-  female("Female"),
-  other("Other");
-
-  const Gender(this.displayName);
-  final String displayName;
-}
-
 class SignUpScreen extends ConsumerStatefulWidget {
-  const SignUpScreen({super.key});
+  const SignUpScreen({super.key, this.signUpState});
+
+  final SignUpState? signUpState;
 
   @override
   ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
 class _SignUpScreenState extends ConsumerState<SignUpScreen> {
+  final log = Logger();
+
   // create user state
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -38,13 +43,59 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
   final _dobController = TextEditingController();
-  final _bioController = TextEditingController();
+  final _phoneController = TextEditingController();
+  Country _selectedCountry = const Country(name: "India", flag: "IN", code: "IN", dialCode: "91", nameTranslations: {}, minLength: 10, maxLength: 10);
   DateTime? _dob;
-  Gender? _selectedGender;
 
   final ValueNotifier<SignUpState> _signUpState = ValueNotifier(SignUpState.createUser);
   final ValueNotifier<bool> _isObscure = ValueNotifier<bool>(true);
   final _formKey = GlobalKey<FormState>();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.signUpState != null) {
+      _signUpState.value = widget.signUpState!;
+    }
+  }
+
+  Future<void> registerUser() async {
+    if (_formKey.currentState!.validate()) {
+      if (_phoneController.text.isEmpty) {
+        CommonFunctions.showToastMessage(context: context, message: "Please enter your phone number");
+        return;
+      }
+
+      try {
+        String? userJson = AppPreferences().getString("user");
+
+        if (userJson == null) {
+          context.goNamed(RouteName.signin);
+          return;
+        }
+
+        User user = User.fromJson(jsonDecode(userJson))!;
+
+        UserProfileRequest userDetails = UserProfileRequest(
+          id: user.id,
+          emailId: user.email ?? "",
+          firstName: _firstNameController.text.trim(),
+          lastName: _lastNameController.text.trim(),
+          phone: _phoneController.text.trim(),
+          country: _selectedCountry.name,
+          dob: _dob!,
+        );
+
+        bool isSuccess = await ref.read(userProfileControllerProvider.notifier).registerUser(userDetails: userDetails, context: context);
+
+        if (isSuccess) {
+          context.goNamed(RouteName.home);
+        }
+      } catch (e, st) {
+        log.e("Something went wrong", error: e, stackTrace: st);
+      }
+    }
+  }
 
   Future<void> _pickDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -128,8 +179,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       final email = _emailController.text.trim();
       final otp = _otpController.text.trim();
 
-      bool isSuccess = await ref.read(authControllerProvider.notifier).verifySignUp(email: email, otp: otp, context: context);
+      bool isSuccess = await ref.read(authControllerProvider.notifier).verifyEmail(email: email, otp: otp, context: context);
       if (isSuccess) {
+        await Future.delayed(const Duration(seconds: 1));
         _signUpState.value = SignUpState.userDetails;
       }
     }
@@ -218,7 +270,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           decoration: InputDecoration(
             labelText: "Email",
             labelStyle: AppTextStyles.interNormalMd.copyWith(color: Colors.white),
-            border: const OutlineInputBorder(),
+            border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
           ),
           validator: (val) => val != null && val.contains('@') ? null : "Enter a valid email",
         ),
@@ -235,7 +289,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               decoration: InputDecoration(
                 labelText: "Password",
                 labelStyle: AppTextStyles.interNormalMd.copyWith(color: AppColors.lightSurface),
-                border: const OutlineInputBorder(),
+                border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
               ),
               validator: (val) => val != null && val.length >= 6 ? null : "Password must be at least 6 characters",
             );
@@ -254,7 +310,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
               decoration: InputDecoration(
                 labelText: "Confirm Password",
                 labelStyle: AppTextStyles.interNormalMd.copyWith(color: AppColors.lightSurface),
-                border: const OutlineInputBorder(),
+                border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
               ),
               validator: (val) => val == _passwordController.text ? null : "Passwords don't match",
             );
@@ -332,7 +390,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           decoration: InputDecoration(
             labelText: "OTP",
             labelStyle: AppTextStyles.interNormalMd.copyWith(color: Colors.white),
-            border: const OutlineInputBorder(),
+            border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
           ),
           maxLength: 6,
           onChanged: (value) {
@@ -361,7 +421,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       children: [
         Text("Welocome to 1FAN!", style: AppTextStyles.rajdhaniBoldXxl.copyWith(color: Colors.white)),
         const SizedBox(height: 8),
-        Text("Enter your details", style: AppTextStyles.interNormalMd.copyWith(color: Colors.white)),
+        Text("Complete your profile", style: AppTextStyles.interNormalMd.copyWith(color: Colors.white)),
         const SizedBox(height: 30),
 
         // Name
@@ -375,7 +435,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 decoration: InputDecoration(
                   labelText: "First Name",
                   labelStyle: AppTextStyles.interNormalMd.copyWith(color: Colors.white),
-                  border: const OutlineInputBorder(),
+                  border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                  enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                  focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
                 ),
                 validator: (val) => val != null && val.length >= 2 ? null : "Name is too short",
               ),
@@ -389,12 +451,36 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 decoration: InputDecoration(
                   labelText: "Last Name",
                   labelStyle: AppTextStyles.interNormalMd.copyWith(color: Colors.white),
-                  border: const OutlineInputBorder(),
+                  border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                  enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+                  focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
                 ),
                 validator: (val) => val != null && val.length >= 2 ? null : "Name is too short",
               ),
             ),
           ],
+        ),
+        const SizedBox(height: 20),
+
+        // Phone
+        IntlPhoneField(
+          controller: _phoneController,
+          decoration: InputDecoration(
+            labelText: 'Phone Number',
+            labelStyle: AppTextStyles.interNormalMd.copyWith(color: Colors.white),
+            filled: true,
+            fillColor: Colors.transparent,
+            border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+          ),
+          style: AppTextStyles.interNormalMd.copyWith(color: Colors.white),
+          initialCountryCode: 'IN',
+          onCountryChanged: (country) {
+            _selectedCountry = country;
+          },
+          dropdownIcon: const Icon(Icons.keyboard_arrow_down_outlined, color: Colors.white),
+          validator: (val) => (val == null || val.number.isEmpty) ? "Please enter phone number" : null,
         ),
         const SizedBox(height: 20),
 
@@ -407,53 +493,38 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           decoration: InputDecoration(
             labelText: "Date of Birth",
             labelStyle: AppTextStyles.interNormalMd.copyWith(color: Colors.white),
-            border: const OutlineInputBorder(),
+            border: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            enabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
+            focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: Colors.white)),
             suffixIcon: const Icon(Icons.calendar_today),
           ),
-          validator: (val) => val == null || val.isEmpty ? "Please select your date of birth" : null,
-        ),
-        const SizedBox(height: 20),
+          validator: (val) {
+            if (val == null || val.isEmpty) {
+              return "Please select your date of birth";
+            }
 
-        // Gender
-        DropdownButtonFormField<Gender>(
-          value: _selectedGender,
-          items: Gender.values.map((gender) {
-            return DropdownMenuItem<Gender>(
-              value: gender,
-              child: Text(
-                gender.displayName,
-                style: AppTextStyles.interNormalMd.copyWith(color: Colors.white),
-              ),
-            );
-          }).toList(),
-          onChanged: (value) {
-            _selectedGender = value;
+            if (_dob == null) return "Invalid date selected";
+
+            final today = DateTime.now();
+            final age = today.year - _dob!.year - ((today.month < _dob!.month || (today.month == _dob!.month && today.day < _dob!.day)) ? 1 : 0);
+
+            if (age < 18) {
+              return "You must be at least 18 years old";
+            }
+
+            return null;
           },
-          decoration: InputDecoration(
-            labelText: "Gender",
-            labelStyle: AppTextStyles.interNormalMd.copyWith(color: Colors.white),
-            border: const OutlineInputBorder(),
-          ),
-          validator: (val) => val == null ? "Please select a gender" : null,
-          dropdownColor: AppColors.secondary,
-          iconEnabledColor: AppColors.darkText,
         ),
         const SizedBox(height: 20),
 
-        // Bio
-        TextFormField(
-          controller: _bioController,
-          keyboardType: TextInputType.name,
-          style: AppTextStyles.interNormalMd.copyWith(color: Colors.white),
-          decoration: InputDecoration(
-            labelText: "Bio",
-            labelStyle: AppTextStyles.interNormalMd.copyWith(color: Colors.white),
-            border: const OutlineInputBorder(),
-          ),
-        ),
+        ref.watch(userProfileControllerProvider).when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              data: (data) => CustomFilledButton(title: 'Let\'s go!', onTap: registerUser),
+              error: (e, st) => CustomFilledButton(title: 'Let\'s go!', onTap: registerUser),
+            ),
+
         const SizedBox(height: 20),
-        CustomFilledButton(title: 'Let\'s go!', onTap: () {}),
-        const SizedBox(height: 20),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

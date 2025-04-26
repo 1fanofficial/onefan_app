@@ -5,12 +5,12 @@ import 'package:onefan_app/core/config/app_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthService {
-  final _client = Supabase.instance.client;
+  final _supabaseClient = Supabase.instance.client;
   static const accessTokenKey = "accessToken";
   static const refreshTokenKey = "refreshTokenKey";
 
   Future<AuthResponse> signUpWithEmail(String email, String password) async {
-    final response = await _client.auth.signUp(
+    final response = await _supabaseClient.auth.signUp(
       email: email,
       password: password,
     );
@@ -18,7 +18,7 @@ class AuthService {
   }
 
   Future<AuthResponse> sigInWithEmailAndPassword(String email, String password) async {
-    final response = await _client.auth.signInWithPassword(
+    final response = await _supabaseClient.auth.signInWithPassword(
       email: email,
       password: password,
     );
@@ -26,7 +26,7 @@ class AuthService {
   }
 
   Future<AuthResponse> verifyEmail(String email, String otp) async {
-    final response = await _client.auth.verifyOTP(
+    final response = await _supabaseClient.auth.verifyOTP(
       type: OtpType.signup,
       token: otp,
       email: email,
@@ -35,7 +35,7 @@ class AuthService {
   }
 
   Future<void> signOut() async {
-    await _client.auth.signOut();
+    await _supabaseClient.auth.signOut();
   }
 
   static Future<bool> isSessionInvalid() async {
