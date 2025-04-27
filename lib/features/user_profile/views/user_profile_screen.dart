@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +9,6 @@ import 'package:onefan_app/core/constants/app_text_styles.dart';
 import 'package:onefan_app/core/routing/route_name.dart';
 import 'package:onefan_app/features/user_profile/controller/user_profile_controller.dart';
 import 'package:onefan_app/features/user_profile/model/response/user_profile_response.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserProfileScreen extends ConsumerStatefulWidget {
   const UserProfileScreen({super.key});
@@ -21,25 +18,10 @@ class UserProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final userJson = AppPreferences().getString("user");
-      if (userJson == null) {
-        context.goNamed(RouteName.signin);
-        return;
-      }
-
-      final user = User.fromJson(jsonDecode(userJson));
-      final userId = user?.id ?? "";
-
-      ref.read(userProfileControllerProvider.notifier).getUserDetails(userId);
-    });
-  }
-
   Future<void> onLogOut() async {
     await AppPreferences().clearAuthData();
+    ref.read(userProfileControllerProvider.notifier).clearCache();
+    ref.invalidate(userProfileControllerProvider);
     context.goNamed(RouteName.signin);
   }
 
@@ -56,16 +38,10 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
           ),
           error: (error, stackTrace) => Scaffold(
             body: AppErrorWidget(
-              errorMessage: "Something went wrong!",
-              onRetry: () {
-                final userJson = AppPreferences().getString("user");
-                if (userJson != null) {
-                  final user = User.fromJson(jsonDecode(userJson));
-                  final userId = user?.id ?? "";
-                  ref.read(userProfileControllerProvider.notifier).getUserDetails(userId);
-                }
-              },
-            ),
+                errorMessage: "Something went wrong!",
+                onRetry: () async {
+                  await ref.read(userProfileControllerProvider.notifier).refresh();
+                }),
           ),
         );
   }
@@ -144,7 +120,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                       ),
                       const SizedBox(width: 4),
                       Text(
-                        'Pro Player',
+                        'Rookie',
                         style: AppTextStyles.interBoldMd.copyWith(
                           color: AppColors.background,
                         ),
@@ -239,7 +215,7 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                 Text('Personal Information', style: AppTextStyles.rajdhaniBoldXl),
               ],
             ),
-            const Divider(height: 24, thickness: 1),
+            const Divider(height: 24, thickness: 0.5),
             _buildInfoRow(Icons.phone, 'Mobile', data?.phone ?? "-"),
             _buildInfoRow(Icons.email, 'Email', data?.emailId ?? "-"),
             _buildInfoRow(

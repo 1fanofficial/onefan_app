@@ -61,7 +61,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       }
 
       // if profile not completed
-      final userProfileResponse = await ref.read(userProfileControllerProvider.notifier).getUserDetails(userId);
+      await ref.read(userProfileControllerProvider.notifier).refresh();
+      final userProfileResponse = await ref.read(userProfileControllerProvider.future);
       if (userProfileResponse == null) {
         context.goNamed(RouteName.signup, extra: SignUpState.otpVerified);
       } else {

@@ -11,7 +11,8 @@ class UserProfileService {
     return UserProfileResponse.fromJson(response.data);
   }
 
-  Future<void> registerUser(Map<String, dynamic> payload) async {
-    await _dioClient.put(path: UserProfileEndpoints.registerUser, payload: payload);
+  Future<UserProfileResponse?> registerUser(Map<String, dynamic> payload) async {
+    Response response = await _dioClient.put(path: UserProfileEndpoints.registerUser, payload: payload);
+    return UserProfileResponse.fromJson(response.data);
   }
 }
