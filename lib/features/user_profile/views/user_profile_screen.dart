@@ -146,13 +146,13 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildStatItem('Points', '3500', Icons.star_purple500_sharp),
+            _buildStatItem('Points', '3500', Icons.star_border_purple500),
             _verticalDivider(),
             _buildStatItem('Rank', '#25', Icons.leaderboard_rounded),
             _verticalDivider(),
             _buildStatItem('Contests', '42', Icons.emoji_events),
             _verticalDivider(),
-            _buildStatItem('Race', '28', Icons.flag),
+            _buildStatItem('Race', '28', Icons.sports_score_outlined),
           ],
         ),
       ),
