@@ -28,11 +28,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final ValueNotifier<bool> _isObscure = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> _isLoading = ValueNotifier<bool>(false);
 
   Future<void> onSignIn() async {
     FocusScope.of(context).unfocus();
 
     if (_formKey.currentState!.validate()) {
+      _isLoading.value = true;
       final email = _emailController.text.trim();
       final password = _passwordController.text.trim();
 
@@ -71,6 +73,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       } catch (e, st) {
         log.e("Something went wrong", error: e, stackTrace: st);
         CommonFunctions.showToastMessage(context: context, message: e.toString());
+      } finally {
+        _isLoading.value = false;
       }
     }
   }
@@ -151,11 +155,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                ref.watch(authControllerProvider).when(
-                      loading: () => const Center(child: CircularProgressIndicator()),
-                      data: (_) => CustomFilledButton(title: 'Sign In', onTap: onSignIn),
-                      error: (e, st) => CustomFilledButton(title: 'Sign In', onTap: onSignIn),
-                    ),
+                ValueListenableBuilder(
+                  valueListenable: _isLoading,
+                  builder: (context, isLoading, child) => isLoading ? const Center(child: CircularProgressIndicator()) : CustomFilledButton(title: 'Sign In', onTap: onSignIn),
+                ),
 
                 const SizedBox(height: 20),
                 Row(

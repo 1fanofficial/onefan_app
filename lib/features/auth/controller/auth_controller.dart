@@ -38,7 +38,6 @@ class AuthController extends _$AuthController {
   }
 
   Future<bool> signIn({required String email, required String password, required BuildContext context}) async {
-    state = const AsyncLoading();
     try {
       final authService = AuthService();
       final response = await authService.sigInWithEmailAndPassword(email, password);
@@ -46,14 +45,11 @@ class AuthController extends _$AuthController {
       final session = response.session;
       if (session != null) {
         await AppPreferences().saveAuthData(session);
-        state = const AsyncData(null);
         return true;
       }
 
-      state = const AsyncData(null);
       return false;
-    } catch (e, st) {
-      state = AsyncError(e, st);
+    } catch (e) {
       AuthApiException exception = e as AuthApiException;
       if (context.mounted) {
         CommonFunctions.showToastMessage(context: context, message: exception.message, messageType: MessageType.error);
