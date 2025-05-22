@@ -18,7 +18,7 @@ class RootRouteProvider {
       GoRoute(
         path: '/contests',
         name: RouteName.contests,
-        builder: (context, state) => const ConstestsScreen(),
+        builder: (context, state) => const ContestsScreen(),
       ),
       GoRoute(
         path: '/raceCalendar',

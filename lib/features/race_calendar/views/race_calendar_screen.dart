@@ -151,7 +151,7 @@ class _RaceCalendarScreenState extends ConsumerState<RaceCalendarScreen> with Si
       return AppBar(
         backgroundColor: AppColors.darkBackground,
         title: Text(
-          "$_selectedYear F1 Calendar",
+          "$_selectedYear Calendar",
           style: AppTextStyles.rajdhaniBoldXxl.copyWith(color: Colors.white),
         ),
         centerTitle: true,

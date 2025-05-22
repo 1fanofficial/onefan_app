@@ -4,17 +4,12 @@ import 'package:go_router/go_router.dart';
 import 'package:onefan_app/core/constants/app_colors.dart';
 import 'package:onefan_app/core/constants/app_text_styles.dart';
 import 'package:onefan_app/core/routing/route_name.dart';
-import 'package:onefan_app/features/auth/views/widgets/custom_filled_button.dart';
+import 'package:onefan_app/features/contests/model/response/contest_response.dart';
 
 class ContestCard extends StatefulWidget {
-  final String grandPrixName;
-  final DateTime deadline;
+  final ContestRespone contestDetails;
 
-  const ContestCard({
-    super.key,
-    required this.grandPrixName,
-    required this.deadline,
-  });
+  const ContestCard({super.key, required this.contestDetails});
 
   @override
   State<ContestCard> createState() => _ContestCardState();
@@ -27,13 +22,13 @@ class _ContestCardState extends State<ContestCard> {
   @override
   void initState() {
     super.initState();
-    _remaining = widget.deadline.difference(DateTime.now());
+    _remaining = widget.contestDetails.deadline.difference(DateTime.now());
     _startTimer();
   }
 
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      final diff = widget.deadline.difference(DateTime.now());
+      final diff = widget.contestDetails.deadline.difference(DateTime.now());
       if (diff.isNegative) {
         _timer?.cancel();
       }
@@ -51,14 +46,27 @@ class _ContestCardState extends State<ContestCard> {
 
   String _formatDuration(Duration duration) {
     if (duration.isNegative) return "Deadline passed";
-    final hours = duration.inHours.toString().padLeft(2, '0');
+
+    final days = duration.inDays;
+    final hours = (duration.inHours % 24).toString().padLeft(2, '0');
     final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
     final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
-    return "$hours:$minutes:$seconds";
+
+    if (days > 0) {
+      return "$days${days == 1 ? ' day' : ' days'}, $hours:$minutes:$seconds";
+    } else {
+      return "$hours:$minutes:$seconds";
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    int totalSpots = widget.contestDetails.maxEntries;
+    int entries = widget.contestDetails.entries;
+    int spotsLeft = totalSpots - entries;
+    final isFillingFast = spotsLeft < totalSpots * 0.25;
+    final spotsFilled = totalSpots == 0 ? 0 : (entries / totalSpots * 100).toInt();
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -76,60 +84,158 @@ class _ContestCardState extends State<ContestCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Header with icon and contest name
+          // Header with GP name and timer
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              /// Contest Name + Grand Prix Name
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Mega Grand Prix Contest",
-                    style: AppTextStyles.rajdhaniBoldXl.copyWith(color: AppColors.primary),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    widget.grandPrixName,
-                    style: AppTextStyles.interSemiBoldMd.copyWith(color: AppColors.secondary),
-                  ),
-                ],
+              // Left side: Contest name & GP
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          widget.contestDetails.contestName,
+                          style: AppTextStyles.rajdhaniBoldXl.copyWith(color: AppColors.primary),
+                        ),
+                        if (isFillingFast) ...[
+                          const SizedBox(width: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: Colors.redAccent,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              "HOT",
+                              style: AppTextStyles.interBoldXs.copyWith(color: Colors.white),
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      widget.contestDetails.raceName,
+                      style: AppTextStyles.interSemiBoldMd.copyWith(color: AppColors.secondary),
+                    ),
+                  ],
+                ),
               ),
 
-              /// Countdown Timer on the right
+              // Right side: Timer
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.redAccent.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: Colors.redAccent.withOpacity(0.3)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.timer, size: 14, color: Colors.redAccent),
+                    const SizedBox(width: 4),
+                    Text(
+                      _formatDuration(_remaining),
+                      style: AppTextStyles.interSemiBoldSm.copyWith(color: Colors.redAccent),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 20),
+
+          // Progress Bar
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Icon(Icons.hourglass_bottom_rounded, size: 16, color: Colors.redAccent),
-                  const SizedBox(width: 4),
                   Text(
-                    _formatDuration(_remaining),
-                    style: AppTextStyles.interNormalSm.copyWith(color: Colors.redAccent),
+                    "$spotsLeft of $totalSpots spots left",
+                    style: AppTextStyles.interNormalSm.copyWith(color: AppColors.secondary),
+                  ),
+                  Text(
+                    "$spotsFilled% filled",
+                    style: AppTextStyles.interSemiBoldSm.copyWith(
+                      color: isFillingFast ? Colors.redAccent : AppColors.secondary,
+                    ),
                   ),
                 ],
+              ),
+              const SizedBox(height: 4),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: LinearProgressIndicator(
+                  value: totalSpots == 0 ? 0 : (totalSpots - spotsLeft) / totalSpots,
+                  backgroundColor: Colors.grey.withOpacity(0.2),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    isFillingFast ? Colors.redAccent : AppColors.primary,
+                  ),
+                  minHeight: 4,
+                ),
               ),
             ],
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 20),
 
-          /// Prize & Entry Info
+          // Prize & Entry Info
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _contestInfoTile("🏆 Prize", "₹50,000"),
-              _contestInfoTile("💰 Entry", "₹49"),
-              _contestInfoTile("👥 Spots Left", "230 / 500"),
+              _contestInfoTile("🏆 Prize", widget.contestDetails.prizePool.toString()),
+              _contestInfoTile("💰 Entry", widget.contestDetails.entryFees.toString()),
+
+              // Join Button (more compact)
+              widget.contestDetails.hasJoined
+                  ? SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.success,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          "Joined",
+                          style: AppTextStyles.interSemiBoldSm.copyWith(color: Colors.white),
+                        ),
+                      ),
+                    )
+                  : SizedBox(
+                      height: 36,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.pushNamed(RouteName.rankDrivers);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          elevation: 0,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: Text(
+                          "Join Now",
+                          style: AppTextStyles.interSemiBoldSm.copyWith(color: Colors.white),
+                        ),
+                      ),
+                    ),
             ],
           ),
-
-          const SizedBox(height: 16),
-
-          /// Join Button
-          CustomFilledButton(
-              title: "Join Now",
-              onTap: () {
-                context.pushNamed(RouteName.rankDrivers);
-              }),
         ],
       ),
     );
@@ -137,12 +243,13 @@ class _ContestCardState extends State<ContestCard> {
 
   Widget _contestInfoTile(String label, String value) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           label,
           style: AppTextStyles.interNormalSm.copyWith(color: AppColors.secondary),
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 2),
         Text(
           value,
           style: AppTextStyles.interSemiBoldMd.copyWith(color: AppColors.secondary),
