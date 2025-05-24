@@ -129,8 +129,7 @@ class _ContestsScreenState extends ConsumerState<ContestsScreen> with SingleTick
                     getLiveContests();
                   },
                 ),
-                data: (contests) {
-                  _allContests = contests;
+                data: (_) {
                   return Expanded(
                     child: TabBarView(
                       controller: _tabController,

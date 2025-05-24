@@ -10,6 +10,8 @@ class TeamDetailsResponse with _$TeamDetailsResponse {
     required String name,
     required String teamCode,
     required String teamColor,
+    required String gradientOne,
+    required String gradientTwo,
   }) = _TeamDetailsResponse;
 
   factory TeamDetailsResponse.fromJson(Map<String, dynamic> json) => _$TeamDetailsResponseFromJson(json);

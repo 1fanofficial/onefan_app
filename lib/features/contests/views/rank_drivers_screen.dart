@@ -1,203 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:onefan_app/common_widgets/app_error_widget.dart';
 import 'package:onefan_app/common_widgets/driver_card.dart';
 import 'package:onefan_app/core/constants/app_colors.dart';
 import 'package:onefan_app/core/constants/app_text_styles.dart';
 import 'package:onefan_app/features/auth/views/widgets/custom_filled_button.dart';
+import 'package:onefan_app/features/contests/controller/drivers_controller.dart';
+import 'package:onefan_app/features/contests/model/response/race_driver_response.dart';
+import 'package:onefan_app/features/race_calendar/model/response/race_details_response.dart';
 
-class Driver {
-  final String id;
-  final String name;
-  final String team;
-  final Color teamColor;
-  final Gradient teamGradient;
-
-  Driver({
-    required this.id,
-    required this.name,
-    required this.team,
-    required this.teamColor,
-    required this.teamGradient,
+class RankDriversScreen extends ConsumerStatefulWidget {
+  const RankDriversScreen({
+    super.key,
+    required this.raceDetails,
   });
-}
 
-final List<Driver> drivers2025 = [
-  // Red Bull Racing
-  Driver(
-    id: 'verstappen',
-    name: 'Max Verstappen',
-    team: 'Red Bull Racing',
-    teamColor: AppColors.redBull,
-    teamGradient: AppColors.redBullGradient,
-  ),
-  Driver(
-    id: 'tsunoda',
-    name: 'Yuki Tsunoda',
-    team: 'Racing Bulls',
-    teamColor: AppColors.redBull,
-    teamGradient: AppColors.redBullGradient,
-  ),
-
-  // Mercedes
-  Driver(
-    id: 'russell',
-    name: 'George Russell',
-    team: 'Mercedes',
-    teamColor: AppColors.mercedes,
-    teamGradient: AppColors.mercedesGradient,
-  ),
-  Driver(
-    id: 'antonelli',
-    name: 'Andrea Kimi Antonelli',
-    team: 'Mercedes',
-    teamColor: AppColors.mercedes,
-    teamGradient: AppColors.mercedesGradient,
-  ),
-
-  // Ferrari
-  Driver(
-    id: 'leclerc',
-    name: 'Charles Leclerc',
-    team: 'Ferrari',
-    teamColor: AppColors.ferrari,
-    teamGradient: AppColors.ferrariGradient,
-  ),
-  Driver(
-    id: 'hamilton',
-    name: 'Lewis Hamilton',
-    team: 'Ferrari',
-    teamColor: AppColors.ferrari,
-    teamGradient: AppColors.ferrariGradient,
-  ),
-
-  // McLaren
-  Driver(
-    id: 'norris',
-    name: 'Lando Norris',
-    team: 'McLaren',
-    teamColor: AppColors.mclaren,
-    teamGradient: AppColors.mclarenGradient,
-  ),
-  Driver(
-    id: 'piastri',
-    name: 'Oscar Piastri',
-    team: 'McLaren',
-    teamColor: AppColors.mclaren,
-    teamGradient: AppColors.mclarenGradient,
-  ),
-
-  // Aston Martin
-  Driver(
-    id: 'alonso',
-    name: 'Fernando Alonso',
-    team: 'Aston Martin',
-    teamColor: AppColors.astonMartin,
-    teamGradient: AppColors.astonMartinGradient,
-  ),
-  Driver(
-    id: 'stroll',
-    name: 'Lance Stroll',
-    team: 'Aston Martin',
-    teamColor: AppColors.astonMartin,
-    teamGradient: AppColors.astonMartinGradient,
-  ),
-
-  // Alpine
-  Driver(
-    id: 'gasly',
-    name: 'Pierre Gasly',
-    team: 'Alpine',
-    teamColor: AppColors.alpine,
-    teamGradient: AppColors.alpineGradient,
-  ),
-  Driver(
-    id: 'doohan',
-    name: 'Jack Doohan',
-    team: 'Alpine',
-    teamColor: AppColors.alpine,
-    teamGradient: AppColors.alpineGradient,
-  ),
-
-  // Haas
-  Driver(
-    id: 'ocon',
-    name: 'Esteban Ocon',
-    team: 'Haas',
-    teamColor: AppColors.haas,
-    teamGradient: AppColors.haasGradient,
-  ),
-  Driver(
-    id: 'bearman',
-    name: 'Oliver Bearman',
-    team: 'Haas',
-    teamColor: AppColors.haas,
-    teamGradient: AppColors.haasGradient,
-  ),
-
-  // Williams
-  Driver(
-    id: 'albon',
-    name: 'Alexander Albon',
-    team: 'Williams',
-    teamColor: AppColors.williams,
-    teamGradient: AppColors.williamsGradient,
-  ),
-  Driver(
-    id: 'sainz',
-    name: 'Carlos Sainz',
-    team: 'Williams',
-    teamColor: AppColors.williams,
-    teamGradient: AppColors.williamsGradient,
-  ),
-
-  // Racing Bulls
-  Driver(
-    id: 'lawson',
-    name: 'Liam Lawson',
-    team: 'Red Bull Racing',
-    teamColor: AppColors.racingBulls,
-    teamGradient: AppColors.racingBullsGradient,
-  ),
-  Driver(
-    id: 'hadjar',
-    name: 'Isack hadjar',
-    team: 'Racing Bulls',
-    teamColor: AppColors.racingBulls,
-    teamGradient: AppColors.racingBullsGradient,
-  ),
-
-  // Sauber
-  Driver(
-    id: 'hulkenberg',
-    name: 'Nico Hülkenberg',
-    team: 'Sauber',
-    teamColor: AppColors.sauber,
-    teamGradient: AppColors.sauberGradient,
-  ),
-  Driver(
-    id: 'bortoleto',
-    name: 'Gabriel Bortoleto',
-    team: 'Sauber',
-    teamColor: AppColors.sauber,
-    teamGradient: AppColors.sauberGradient,
-  ),
-];
-
-class RankDriversScreen extends StatefulWidget {
-  const RankDriversScreen({super.key});
+  final RaceDetailsResponse raceDetails;
 
   @override
-  State<RankDriversScreen> createState() => _RankDriversScreenState();
+  ConsumerState<RankDriversScreen> createState() => _RankDriversScreenState();
 }
 
-class _RankDriversScreenState extends State<RankDriversScreen> {
-  late List<Driver> _rankedDrivers;
+class _RankDriversScreenState extends ConsumerState<RankDriversScreen> {
+  List<RaceDriverResponse> _rankedDrivers = [];
   final ValueNotifier<String?> _fastestLapDriverId = ValueNotifier<String?>(null);
   final GlobalKey _listKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
-    _rankedDrivers = List.from(drivers2025);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      getDriversForRace();
+    });
+  }
+
+  Future<void> getDriversForRace() async {
+    _rankedDrivers = await ref.read(driversControllerProvider.notifier).getDriversForRace(raceId: widget.raceDetails.id);
+    setState(() {});
   }
 
   @override
@@ -254,39 +93,47 @@ class _RankDriversScreenState extends State<RankDriversScreen> {
                 ],
               ),
             ),
-            ValueListenableBuilder(
-              key: _listKey,
-              valueListenable: _fastestLapDriverId,
-              builder: (context, fastestLapDriverId, _) {
-                return Expanded(
-                  child: ReorderableListView.builder(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    itemCount: _rankedDrivers.length,
-                    onReorder: (oldIndex, newIndex) {
-                      setState(() {
-                        if (newIndex > oldIndex) newIndex -= 1;
-                        final item = _rankedDrivers.removeAt(oldIndex);
-                        _rankedDrivers.insert(newIndex, item);
-                      });
-                    },
-                    itemBuilder: (context, index) {
-                      final driver = _rankedDrivers[index];
-                      return GestureDetector(
-                        key: ValueKey(driver.id),
-                        onTap: () {
-                          _fastestLapDriverId.value = fastestLapDriverId == driver.id ? null : driver.id;
-                        },
-                        child: DriverCard(
-                          driver: driver,
-                          selectedDriverId: fastestLapDriverId,
-                          finishPosition: index + 1,
+            ref.watch(driversControllerProvider).when(
+                  loading: () => const Expanded(child: Center(child: CircularProgressIndicator())),
+                  error: (e, st) => AppErrorWidget(
+                      errorMessage: "",
+                      onRetry: () {
+                        getDriversForRace();
+                      }),
+                  data: (_) => ValueListenableBuilder(
+                    key: _listKey,
+                    valueListenable: _fastestLapDriverId,
+                    builder: (context, fastestLapDriverId, _) {
+                      return Expanded(
+                        child: ReorderableListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          itemCount: _rankedDrivers.length,
+                          onReorder: (oldIndex, newIndex) {
+                            setState(() {
+                              if (newIndex > oldIndex) newIndex -= 1;
+                              final item = _rankedDrivers.removeAt(oldIndex);
+                              _rankedDrivers.insert(newIndex, item);
+                            });
+                          },
+                          itemBuilder: (context, index) {
+                            final raceDriver = _rankedDrivers[index];
+                            return GestureDetector(
+                              key: ValueKey(raceDriver.driver.id),
+                              onTap: () {
+                                _fastestLapDriverId.value = fastestLapDriverId == raceDriver.driver.id ? null : raceDriver.driver.id;
+                              },
+                              child: DriverCard(
+                                driver: raceDriver.driver,
+                                selectedDriverId: fastestLapDriverId,
+                                finishPosition: index + 1,
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
                   ),
-                );
-              },
-            ),
+                ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Row(
@@ -363,9 +210,9 @@ class _RankDriversScreenState extends State<RankDriversScreen> {
               childAspectRatio: 3, // Adjust as needed
             ),
             itemBuilder: (context, index) {
-              final driver = _rankedDrivers[index];
+              final raceDriver = _rankedDrivers[index];
               return DriverCard(
-                driver: driver,
+                driver: raceDriver.driver,
                 selectedDriverId: _fastestLapDriverId.value,
                 finishPosition: index + 1,
                 isPreview: true,

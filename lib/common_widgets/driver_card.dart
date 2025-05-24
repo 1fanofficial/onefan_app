@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:onefan_app/core/constants/app_colors.dart';
 import 'package:onefan_app/core/constants/app_text_styles.dart';
-import 'package:onefan_app/features/contests/views/rank_drivers_screen.dart';
+import 'package:onefan_app/features/contests/model/response/driver_details_response.dart';
 
 class DriverCard extends StatelessWidget {
   const DriverCard({
@@ -12,7 +12,7 @@ class DriverCard extends StatelessWidget {
     this.isPreview = false,
   });
 
-  final Driver driver;
+  final DriverDetailsResponse driver;
   final int finishPosition;
   final String? selectedDriverId;
   final bool isPreview;
@@ -25,7 +25,13 @@ class DriverCard extends StatelessWidget {
           child: Container(
             key: ValueKey(driver.id),
             margin: const EdgeInsets.only(bottom: 10),
-            decoration: BoxDecoration(gradient: driver.teamGradient),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(int.parse(driver.team.gradientOne)), Color(int.parse(driver.team.gradientTwo))],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
             child: Row(
               children: [
                 Container(
@@ -39,7 +45,7 @@ class DriverCard extends StatelessWidget {
                 ),
                 if (!isPreview)
                   ColoredBox(
-                    color: driver.teamColor,
+                    color: Color(int.parse(driver.team.teamColor)),
                     child: const SizedBox(
                       height: 60,
                       width: 50,
@@ -54,8 +60,8 @@ class DriverCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(driver.name, style: AppTextStyles.rajdhaniBoldLg),
-                    Text(driver.team, style: AppTextStyles.interSemiBoldSm),
+                    Text("${driver.firstName} ${driver.lastName}", style: AppTextStyles.rajdhaniBoldLg),
+                    Text(driver.team.name, style: AppTextStyles.interSemiBoldSm),
                   ],
                 ),
               ],

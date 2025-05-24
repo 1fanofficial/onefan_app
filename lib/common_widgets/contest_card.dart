@@ -117,7 +117,7 @@ class _ContestCardState extends State<ContestCard> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      widget.contestDetails.raceName,
+                      widget.contestDetails.raceDetails.raceName,
                       style: AppTextStyles.interSemiBoldMd.copyWith(color: AppColors.secondary),
                     ),
                   ],
@@ -217,7 +217,7 @@ class _ContestCardState extends State<ContestCard> {
                       height: 36,
                       child: ElevatedButton(
                         onPressed: () {
-                          context.pushNamed(RouteName.rankDrivers);
+                          context.pushNamed(RouteName.rankDrivers, extra: widget.contestDetails.raceDetails);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,

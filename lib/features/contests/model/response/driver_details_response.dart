@@ -11,7 +11,7 @@ class DriverDetailsResponse with _$DriverDetailsResponse {
     required String firstName,
     required String lastName,
     required String driverCode,
-    required TeamDetailsResponse teamDetails,
+    required TeamDetailsResponse team,
     required int carNumber,
     required String nationality,
     required String status,

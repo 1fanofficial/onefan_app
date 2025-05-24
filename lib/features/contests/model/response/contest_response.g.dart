@@ -11,7 +11,8 @@ _$ContestDetailsResponseImpl _$$ContestDetailsResponseImplFromJson(
     _$ContestDetailsResponseImpl(
       id: json['id'] as String,
       contestName: json['contestName'] as String,
-      raceName: json['raceName'] as String,
+      raceDetails: RaceDetailsResponse.fromJson(
+          json['raceDetails'] as Map<String, dynamic>),
       entryFees: (json['entryFees'] as num).toInt(),
       deadline: DateTime.parse(json['deadline'] as String),
       prizePool: (json['prizePool'] as num).toInt(),
@@ -26,7 +27,7 @@ Map<String, dynamic> _$$ContestDetailsResponseImplToJson(
     <String, dynamic>{
       'id': instance.id,
       'contestName': instance.contestName,
-      'raceName': instance.raceName,
+      'raceDetails': instance.raceDetails,
       'entryFees': instance.entryFees,
       'deadline': instance.deadline.toIso8601String(),
       'prizePool': instance.prizePool,

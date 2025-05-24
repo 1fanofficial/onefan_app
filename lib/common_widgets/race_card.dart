@@ -137,7 +137,7 @@ class RaceCard extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    Color teamColor = race.raceWinner != null ? Color(int.parse(race.raceWinner!.teamDetails.teamColor)) : AppColors.background;
+    Color teamColor = race.raceWinner != null ? Color(int.parse(race.raceWinner!.team.teamColor)) : AppColors.background;
 
     return Container(
       margin: const EdgeInsets.only(top: 12),
@@ -206,7 +206,7 @@ class RaceCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    race.raceWinner?.teamDetails.name ?? "-",
+                    race.raceWinner?.team.name ?? "-",
                     style: AppTextStyles.interNormalXs.copyWith(
                       color: teamColor,
                       fontWeight: FontWeight.w500,

@@ -13,8 +13,7 @@ _$DriverDetailsResponseImpl _$$DriverDetailsResponseImplFromJson(
       firstName: json['firstName'] as String,
       lastName: json['lastName'] as String,
       driverCode: json['driverCode'] as String,
-      teamDetails: TeamDetailsResponse.fromJson(
-          json['teamDetails'] as Map<String, dynamic>),
+      team: TeamDetailsResponse.fromJson(json['team'] as Map<String, dynamic>),
       carNumber: (json['carNumber'] as num).toInt(),
       nationality: json['nationality'] as String,
       status: json['status'] as String,
@@ -27,7 +26,7 @@ Map<String, dynamic> _$$DriverDetailsResponseImplToJson(
       'firstName': instance.firstName,
       'lastName': instance.lastName,
       'driverCode': instance.driverCode,
-      'teamDetails': instance.teamDetails,
+      'team': instance.team,
       'carNumber': instance.carNumber,
       'nationality': instance.nationality,
       'status': instance.status,

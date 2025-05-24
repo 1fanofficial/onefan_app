@@ -3,5 +3,5 @@ class ContestEndpoints {
   static const getContestDetails = "/getContestDetails/{CONTESTID}";
 
   static const getDriverById = "/getDriverById";
-  static const getDriversByRace = "/driver/by-race/{raceId}";
+  static const getDriversByRace = "/driver/by-race/{RACEID}";
 }

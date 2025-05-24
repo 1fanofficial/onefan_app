@@ -25,7 +25,7 @@ mixin _$DriverDetailsResponse {
   String get firstName => throw _privateConstructorUsedError;
   String get lastName => throw _privateConstructorUsedError;
   String get driverCode => throw _privateConstructorUsedError;
-  TeamDetailsResponse get teamDetails => throw _privateConstructorUsedError;
+  TeamDetailsResponse get team => throw _privateConstructorUsedError;
   int get carNumber => throw _privateConstructorUsedError;
   String get nationality => throw _privateConstructorUsedError;
   String get status => throw _privateConstructorUsedError;
@@ -47,12 +47,12 @@ abstract class $DriverDetailsResponseCopyWith<$Res> {
       String firstName,
       String lastName,
       String driverCode,
-      TeamDetailsResponse teamDetails,
+      TeamDetailsResponse team,
       int carNumber,
       String nationality,
       String status});
 
-  $TeamDetailsResponseCopyWith<$Res> get teamDetails;
+  $TeamDetailsResponseCopyWith<$Res> get team;
 }
 
 /// @nodoc
@@ -73,7 +73,7 @@ class _$DriverDetailsResponseCopyWithImpl<$Res,
     Object? firstName = null,
     Object? lastName = null,
     Object? driverCode = null,
-    Object? teamDetails = null,
+    Object? team = null,
     Object? carNumber = null,
     Object? nationality = null,
     Object? status = null,
@@ -95,9 +95,9 @@ class _$DriverDetailsResponseCopyWithImpl<$Res,
           ? _value.driverCode
           : driverCode // ignore: cast_nullable_to_non_nullable
               as String,
-      teamDetails: null == teamDetails
-          ? _value.teamDetails
-          : teamDetails // ignore: cast_nullable_to_non_nullable
+      team: null == team
+          ? _value.team
+          : team // ignore: cast_nullable_to_non_nullable
               as TeamDetailsResponse,
       carNumber: null == carNumber
           ? _value.carNumber
@@ -116,9 +116,9 @@ class _$DriverDetailsResponseCopyWithImpl<$Res,
 
   @override
   @pragma('vm:prefer-inline')
-  $TeamDetailsResponseCopyWith<$Res> get teamDetails {
-    return $TeamDetailsResponseCopyWith<$Res>(_value.teamDetails, (value) {
-      return _then(_value.copyWith(teamDetails: value) as $Val);
+  $TeamDetailsResponseCopyWith<$Res> get team {
+    return $TeamDetailsResponseCopyWith<$Res>(_value.team, (value) {
+      return _then(_value.copyWith(team: value) as $Val);
     });
   }
 }
@@ -137,13 +137,13 @@ abstract class _$$DriverDetailsResponseImplCopyWith<$Res>
       String firstName,
       String lastName,
       String driverCode,
-      TeamDetailsResponse teamDetails,
+      TeamDetailsResponse team,
       int carNumber,
       String nationality,
       String status});
 
   @override
-  $TeamDetailsResponseCopyWith<$Res> get teamDetails;
+  $TeamDetailsResponseCopyWith<$Res> get team;
 }
 
 /// @nodoc
@@ -162,7 +162,7 @@ class __$$DriverDetailsResponseImplCopyWithImpl<$Res>
     Object? firstName = null,
     Object? lastName = null,
     Object? driverCode = null,
-    Object? teamDetails = null,
+    Object? team = null,
     Object? carNumber = null,
     Object? nationality = null,
     Object? status = null,
@@ -184,9 +184,9 @@ class __$$DriverDetailsResponseImplCopyWithImpl<$Res>
           ? _value.driverCode
           : driverCode // ignore: cast_nullable_to_non_nullable
               as String,
-      teamDetails: null == teamDetails
-          ? _value.teamDetails
-          : teamDetails // ignore: cast_nullable_to_non_nullable
+      team: null == team
+          ? _value.team
+          : team // ignore: cast_nullable_to_non_nullable
               as TeamDetailsResponse,
       carNumber: null == carNumber
           ? _value.carNumber
@@ -212,7 +212,7 @@ class _$DriverDetailsResponseImpl implements _DriverDetailsResponse {
       required this.firstName,
       required this.lastName,
       required this.driverCode,
-      required this.teamDetails,
+      required this.team,
       required this.carNumber,
       required this.nationality,
       required this.status});
@@ -229,7 +229,7 @@ class _$DriverDetailsResponseImpl implements _DriverDetailsResponse {
   @override
   final String driverCode;
   @override
-  final TeamDetailsResponse teamDetails;
+  final TeamDetailsResponse team;
   @override
   final int carNumber;
   @override
@@ -239,7 +239,7 @@ class _$DriverDetailsResponseImpl implements _DriverDetailsResponse {
 
   @override
   String toString() {
-    return 'DriverDetailsResponse(id: $id, firstName: $firstName, lastName: $lastName, driverCode: $driverCode, teamDetails: $teamDetails, carNumber: $carNumber, nationality: $nationality, status: $status)';
+    return 'DriverDetailsResponse(id: $id, firstName: $firstName, lastName: $lastName, driverCode: $driverCode, team: $team, carNumber: $carNumber, nationality: $nationality, status: $status)';
   }
 
   @override
@@ -254,8 +254,7 @@ class _$DriverDetailsResponseImpl implements _DriverDetailsResponse {
                 other.lastName == lastName) &&
             (identical(other.driverCode, driverCode) ||
                 other.driverCode == driverCode) &&
-            (identical(other.teamDetails, teamDetails) ||
-                other.teamDetails == teamDetails) &&
+            (identical(other.team, team) || other.team == team) &&
             (identical(other.carNumber, carNumber) ||
                 other.carNumber == carNumber) &&
             (identical(other.nationality, nationality) ||
@@ -266,7 +265,7 @@ class _$DriverDetailsResponseImpl implements _DriverDetailsResponse {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, firstName, lastName,
-      driverCode, teamDetails, carNumber, nationality, status);
+      driverCode, team, carNumber, nationality, status);
 
   @JsonKey(ignore: true)
   @override
@@ -289,7 +288,7 @@ abstract class _DriverDetailsResponse implements DriverDetailsResponse {
       required final String firstName,
       required final String lastName,
       required final String driverCode,
-      required final TeamDetailsResponse teamDetails,
+      required final TeamDetailsResponse team,
       required final int carNumber,
       required final String nationality,
       required final String status}) = _$DriverDetailsResponseImpl;
@@ -306,7 +305,7 @@ abstract class _DriverDetailsResponse implements DriverDetailsResponse {
   @override
   String get driverCode;
   @override
-  TeamDetailsResponse get teamDetails;
+  TeamDetailsResponse get team;
   @override
   int get carNumber;
   @override

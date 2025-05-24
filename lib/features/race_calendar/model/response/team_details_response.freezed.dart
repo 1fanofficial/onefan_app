@@ -24,6 +24,8 @@ mixin _$TeamDetailsResponse {
   String get name => throw _privateConstructorUsedError;
   String get teamCode => throw _privateConstructorUsedError;
   String get teamColor => throw _privateConstructorUsedError;
+  String get gradientOne => throw _privateConstructorUsedError;
+  String get gradientTwo => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +39,13 @@ abstract class $TeamDetailsResponseCopyWith<$Res> {
           TeamDetailsResponse value, $Res Function(TeamDetailsResponse) then) =
       _$TeamDetailsResponseCopyWithImpl<$Res, TeamDetailsResponse>;
   @useResult
-  $Res call({String id, String name, String teamCode, String teamColor});
+  $Res call(
+      {String id,
+      String name,
+      String teamCode,
+      String teamColor,
+      String gradientOne,
+      String gradientTwo});
 }
 
 /// @nodoc
@@ -57,6 +65,8 @@ class _$TeamDetailsResponseCopyWithImpl<$Res, $Val extends TeamDetailsResponse>
     Object? name = null,
     Object? teamCode = null,
     Object? teamColor = null,
+    Object? gradientOne = null,
+    Object? gradientTwo = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -75,6 +85,14 @@ class _$TeamDetailsResponseCopyWithImpl<$Res, $Val extends TeamDetailsResponse>
           ? _value.teamColor
           : teamColor // ignore: cast_nullable_to_non_nullable
               as String,
+      gradientOne: null == gradientOne
+          ? _value.gradientOne
+          : gradientOne // ignore: cast_nullable_to_non_nullable
+              as String,
+      gradientTwo: null == gradientTwo
+          ? _value.gradientTwo
+          : gradientTwo // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -87,7 +105,13 @@ abstract class _$$TeamDetailsResponseImplCopyWith<$Res>
       __$$TeamDetailsResponseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String name, String teamCode, String teamColor});
+  $Res call(
+      {String id,
+      String name,
+      String teamCode,
+      String teamColor,
+      String gradientOne,
+      String gradientTwo});
 }
 
 /// @nodoc
@@ -105,6 +129,8 @@ class __$$TeamDetailsResponseImplCopyWithImpl<$Res>
     Object? name = null,
     Object? teamCode = null,
     Object? teamColor = null,
+    Object? gradientOne = null,
+    Object? gradientTwo = null,
   }) {
     return _then(_$TeamDetailsResponseImpl(
       id: null == id
@@ -123,6 +149,14 @@ class __$$TeamDetailsResponseImplCopyWithImpl<$Res>
           ? _value.teamColor
           : teamColor // ignore: cast_nullable_to_non_nullable
               as String,
+      gradientOne: null == gradientOne
+          ? _value.gradientOne
+          : gradientOne // ignore: cast_nullable_to_non_nullable
+              as String,
+      gradientTwo: null == gradientTwo
+          ? _value.gradientTwo
+          : gradientTwo // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -134,7 +168,9 @@ class _$TeamDetailsResponseImpl implements _TeamDetailsResponse {
       {required this.id,
       required this.name,
       required this.teamCode,
-      required this.teamColor});
+      required this.teamColor,
+      required this.gradientOne,
+      required this.gradientTwo});
 
   factory _$TeamDetailsResponseImpl.fromJson(Map<String, dynamic> json) =>
       _$$TeamDetailsResponseImplFromJson(json);
@@ -147,10 +183,14 @@ class _$TeamDetailsResponseImpl implements _TeamDetailsResponse {
   final String teamCode;
   @override
   final String teamColor;
+  @override
+  final String gradientOne;
+  @override
+  final String gradientTwo;
 
   @override
   String toString() {
-    return 'TeamDetailsResponse(id: $id, name: $name, teamCode: $teamCode, teamColor: $teamColor)';
+    return 'TeamDetailsResponse(id: $id, name: $name, teamCode: $teamCode, teamColor: $teamColor, gradientOne: $gradientOne, gradientTwo: $gradientTwo)';
   }
 
   @override
@@ -163,12 +203,17 @@ class _$TeamDetailsResponseImpl implements _TeamDetailsResponse {
             (identical(other.teamCode, teamCode) ||
                 other.teamCode == teamCode) &&
             (identical(other.teamColor, teamColor) ||
-                other.teamColor == teamColor));
+                other.teamColor == teamColor) &&
+            (identical(other.gradientOne, gradientOne) ||
+                other.gradientOne == gradientOne) &&
+            (identical(other.gradientTwo, gradientTwo) ||
+                other.gradientTwo == gradientTwo));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, teamCode, teamColor);
+  int get hashCode => Object.hash(
+      runtimeType, id, name, teamCode, teamColor, gradientOne, gradientTwo);
 
   @JsonKey(ignore: true)
   @override
@@ -190,7 +235,9 @@ abstract class _TeamDetailsResponse implements TeamDetailsResponse {
       {required final String id,
       required final String name,
       required final String teamCode,
-      required final String teamColor}) = _$TeamDetailsResponseImpl;
+      required final String teamColor,
+      required final String gradientOne,
+      required final String gradientTwo}) = _$TeamDetailsResponseImpl;
 
   factory _TeamDetailsResponse.fromJson(Map<String, dynamic> json) =
       _$TeamDetailsResponseImpl.fromJson;
@@ -203,6 +250,10 @@ abstract class _TeamDetailsResponse implements TeamDetailsResponse {
   String get teamCode;
   @override
   String get teamColor;
+  @override
+  String get gradientOne;
+  @override
+  String get gradientTwo;
   @override
   @JsonKey(ignore: true)
   _$$TeamDetailsResponseImplCopyWith<_$TeamDetailsResponseImpl> get copyWith =>

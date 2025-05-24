@@ -13,6 +13,8 @@ _$TeamDetailsResponseImpl _$$TeamDetailsResponseImplFromJson(
       name: json['name'] as String,
       teamCode: json['teamCode'] as String,
       teamColor: json['teamColor'] as String,
+      gradientOne: json['gradientOne'] as String,
+      gradientTwo: json['gradientTwo'] as String,
     );
 
 Map<String, dynamic> _$$TeamDetailsResponseImplToJson(
@@ -22,4 +24,6 @@ Map<String, dynamic> _$$TeamDetailsResponseImplToJson(
       'name': instance.name,
       'teamCode': instance.teamCode,
       'teamColor': instance.teamColor,
+      'gradientOne': instance.gradientOne,
+      'gradientTwo': instance.gradientTwo,
     };

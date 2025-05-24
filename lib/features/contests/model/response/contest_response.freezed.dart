@@ -22,7 +22,7 @@ ContestRespone _$ContestResponeFromJson(Map<String, dynamic> json) {
 mixin _$ContestRespone {
   String get id => throw _privateConstructorUsedError;
   String get contestName => throw _privateConstructorUsedError;
-  String get raceName => throw _privateConstructorUsedError;
+  RaceDetailsResponse get raceDetails => throw _privateConstructorUsedError;
   int get entryFees => throw _privateConstructorUsedError;
   DateTime get deadline => throw _privateConstructorUsedError;
   int get prizePool => throw _privateConstructorUsedError;
@@ -46,7 +46,7 @@ abstract class $ContestResponeCopyWith<$Res> {
   $Res call(
       {String id,
       String contestName,
-      String raceName,
+      RaceDetailsResponse raceDetails,
       int entryFees,
       DateTime deadline,
       int prizePool,
@@ -54,6 +54,8 @@ abstract class $ContestResponeCopyWith<$Res> {
       int maxEntries,
       String status,
       bool hasJoined});
+
+  $RaceDetailsResponseCopyWith<$Res> get raceDetails;
 }
 
 /// @nodoc
@@ -71,7 +73,7 @@ class _$ContestResponeCopyWithImpl<$Res, $Val extends ContestRespone>
   $Res call({
     Object? id = null,
     Object? contestName = null,
-    Object? raceName = null,
+    Object? raceDetails = null,
     Object? entryFees = null,
     Object? deadline = null,
     Object? prizePool = null,
@@ -89,10 +91,10 @@ class _$ContestResponeCopyWithImpl<$Res, $Val extends ContestRespone>
           ? _value.contestName
           : contestName // ignore: cast_nullable_to_non_nullable
               as String,
-      raceName: null == raceName
-          ? _value.raceName
-          : raceName // ignore: cast_nullable_to_non_nullable
-              as String,
+      raceDetails: null == raceDetails
+          ? _value.raceDetails
+          : raceDetails // ignore: cast_nullable_to_non_nullable
+              as RaceDetailsResponse,
       entryFees: null == entryFees
           ? _value.entryFees
           : entryFees // ignore: cast_nullable_to_non_nullable
@@ -123,6 +125,14 @@ class _$ContestResponeCopyWithImpl<$Res, $Val extends ContestRespone>
               as bool,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $RaceDetailsResponseCopyWith<$Res> get raceDetails {
+    return $RaceDetailsResponseCopyWith<$Res>(_value.raceDetails, (value) {
+      return _then(_value.copyWith(raceDetails: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -137,7 +147,7 @@ abstract class _$$ContestDetailsResponseImplCopyWith<$Res>
   $Res call(
       {String id,
       String contestName,
-      String raceName,
+      RaceDetailsResponse raceDetails,
       int entryFees,
       DateTime deadline,
       int prizePool,
@@ -145,6 +155,9 @@ abstract class _$$ContestDetailsResponseImplCopyWith<$Res>
       int maxEntries,
       String status,
       bool hasJoined});
+
+  @override
+  $RaceDetailsResponseCopyWith<$Res> get raceDetails;
 }
 
 /// @nodoc
@@ -161,7 +174,7 @@ class __$$ContestDetailsResponseImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? contestName = null,
-    Object? raceName = null,
+    Object? raceDetails = null,
     Object? entryFees = null,
     Object? deadline = null,
     Object? prizePool = null,
@@ -179,10 +192,10 @@ class __$$ContestDetailsResponseImplCopyWithImpl<$Res>
           ? _value.contestName
           : contestName // ignore: cast_nullable_to_non_nullable
               as String,
-      raceName: null == raceName
-          ? _value.raceName
-          : raceName // ignore: cast_nullable_to_non_nullable
-              as String,
+      raceDetails: null == raceDetails
+          ? _value.raceDetails
+          : raceDetails // ignore: cast_nullable_to_non_nullable
+              as RaceDetailsResponse,
       entryFees: null == entryFees
           ? _value.entryFees
           : entryFees // ignore: cast_nullable_to_non_nullable
@@ -221,7 +234,7 @@ class _$ContestDetailsResponseImpl implements _ContestDetailsResponse {
   const _$ContestDetailsResponseImpl(
       {required this.id,
       required this.contestName,
-      required this.raceName,
+      required this.raceDetails,
       required this.entryFees,
       required this.deadline,
       required this.prizePool,
@@ -238,7 +251,7 @@ class _$ContestDetailsResponseImpl implements _ContestDetailsResponse {
   @override
   final String contestName;
   @override
-  final String raceName;
+  final RaceDetailsResponse raceDetails;
   @override
   final int entryFees;
   @override
@@ -256,7 +269,7 @@ class _$ContestDetailsResponseImpl implements _ContestDetailsResponse {
 
   @override
   String toString() {
-    return 'ContestRespone(id: $id, contestName: $contestName, raceName: $raceName, entryFees: $entryFees, deadline: $deadline, prizePool: $prizePool, entries: $entries, maxEntries: $maxEntries, status: $status, hasJoined: $hasJoined)';
+    return 'ContestRespone(id: $id, contestName: $contestName, raceDetails: $raceDetails, entryFees: $entryFees, deadline: $deadline, prizePool: $prizePool, entries: $entries, maxEntries: $maxEntries, status: $status, hasJoined: $hasJoined)';
   }
 
   @override
@@ -267,8 +280,8 @@ class _$ContestDetailsResponseImpl implements _ContestDetailsResponse {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.contestName, contestName) ||
                 other.contestName == contestName) &&
-            (identical(other.raceName, raceName) ||
-                other.raceName == raceName) &&
+            (identical(other.raceDetails, raceDetails) ||
+                other.raceDetails == raceDetails) &&
             (identical(other.entryFees, entryFees) ||
                 other.entryFees == entryFees) &&
             (identical(other.deadline, deadline) ||
@@ -285,7 +298,7 @@ class _$ContestDetailsResponseImpl implements _ContestDetailsResponse {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, contestName, raceName,
+  int get hashCode => Object.hash(runtimeType, id, contestName, raceDetails,
       entryFees, deadline, prizePool, entries, maxEntries, status, hasJoined);
 
   @JsonKey(ignore: true)
@@ -307,7 +320,7 @@ abstract class _ContestDetailsResponse implements ContestRespone {
   const factory _ContestDetailsResponse(
       {required final String id,
       required final String contestName,
-      required final String raceName,
+      required final RaceDetailsResponse raceDetails,
       required final int entryFees,
       required final DateTime deadline,
       required final int prizePool,
@@ -324,7 +337,7 @@ abstract class _ContestDetailsResponse implements ContestRespone {
   @override
   String get contestName;
   @override
-  String get raceName;
+  RaceDetailsResponse get raceDetails;
   @override
   int get entryFees;
   @override
