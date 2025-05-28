@@ -217,7 +217,7 @@ class _ContestCardState extends State<ContestCard> {
                       height: 36,
                       child: ElevatedButton(
                         onPressed: () {
-                          context.pushNamed(RouteName.rankDrivers, extra: widget.contestDetails.raceDetails);
+                          context.pushNamed(RouteName.rankDrivers, extra: widget.contestDetails);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,

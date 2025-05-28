@@ -27,4 +27,13 @@ class ContestService {
       rethrow;
     }
   }
+
+  Future<void> addContestEntry({required Map<String, dynamic> payload}) async {
+    try {
+      await _dioClient.post(path: ContestEndpoints.addContestEntry, payload: payload);
+    } catch (e, st) {
+      log.e("Error in getting race drivers", error: e, stackTrace: st);
+      rethrow;
+    }
+  }
 }

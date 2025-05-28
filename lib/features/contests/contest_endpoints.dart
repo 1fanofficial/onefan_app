@@ -4,4 +4,6 @@ class ContestEndpoints {
 
   static const getDriverById = "/getDriverById";
   static const getDriversByRace = "/driver/by-race/{RACEID}";
+
+  static const addContestEntry = "/joinContest";
 }

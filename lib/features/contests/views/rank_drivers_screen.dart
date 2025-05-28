@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:onefan_app/common_widgets/app_error_widget.dart';
 import 'package:onefan_app/common_widgets/driver_card.dart';
 import 'package:onefan_app/core/constants/app_colors.dart';
 import 'package:onefan_app/core/constants/app_text_styles.dart';
+import 'package:onefan_app/core/routing/route_name.dart';
+import 'package:onefan_app/core/utils/common_functions.dart';
 import 'package:onefan_app/features/auth/views/widgets/custom_filled_button.dart';
+import 'package:onefan_app/features/contests/controller/add_contest_entry_controller.dart';
 import 'package:onefan_app/features/contests/controller/drivers_controller.dart';
+import 'package:onefan_app/features/contests/model/request/contest_entry_request.dart';
+import 'package:onefan_app/features/contests/model/request/driver_ranking_request.dart';
+import 'package:onefan_app/features/contests/model/response/contest_response.dart';
 import 'package:onefan_app/features/contests/model/response/race_driver_response.dart';
-import 'package:onefan_app/features/race_calendar/model/response/race_details_response.dart';
 
 class RankDriversScreen extends ConsumerStatefulWidget {
   const RankDriversScreen({
     super.key,
-    required this.raceDetails,
+    required this.contestDetails,
   });
 
-  final RaceDetailsResponse raceDetails;
+  final ContestRespone contestDetails;
 
   @override
   ConsumerState<RankDriversScreen> createState() => _RankDriversScreenState();
@@ -35,8 +41,54 @@ class _RankDriversScreenState extends ConsumerState<RankDriversScreen> {
   }
 
   Future<void> getDriversForRace() async {
-    _rankedDrivers = await ref.read(driversControllerProvider.notifier).getDriversForRace(raceId: widget.raceDetails.id);
+    _rankedDrivers = await ref.read(driversControllerProvider.notifier).getDriversForRace(raceId: widget.contestDetails.raceDetails.id);
     setState(() {});
+  }
+
+  void addContestEntry() async {
+    if (_fastestLapDriverId.value == null) {
+      CommonFunctions.showToastMessage(context: context, message: "Please select fastest lap driver", messageType: MessageType.error);
+      return;
+    }
+
+    try {
+      List<DriverRankingRequest> driverRankings = [];
+      for (int i = 0; i < _rankedDrivers.length; i++) {
+        DriverRankingRequest driverRankingRequest = DriverRankingRequest(
+          driverId: _rankedDrivers[i].driver.id,
+          predictedPosition: i + 1,
+        );
+        driverRankings.add(driverRankingRequest);
+      }
+
+      ContestEntryRequest contestEntryRequest = ContestEntryRequest(
+        contestId: widget.contestDetails.id,
+        driverRankings: driverRankings,
+        fastestLapDriverId: _fastestLapDriverId.value!,
+      );
+
+      await ref.read(addContestEntryControllerProvider.notifier).addContestEntry(
+            payload: contestEntryRequest.toJson(),
+          );
+
+      if (!mounted) return;
+
+      CommonFunctions.showToastMessage(
+        context: context,
+        message: "Contest Joined",
+        messageType: MessageType.success,
+      );
+
+      context.goNamed(RouteName.contests);
+    } catch (e) {
+      if (!mounted) return;
+
+      CommonFunctions.showToastMessage(
+        context: context,
+        message: "Failed to join contest",
+        messageType: MessageType.error,
+      );
+    }
   }
 
   @override
@@ -154,16 +206,19 @@ class _RankDriversScreenState extends ConsumerState<RankDriversScreen> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: CustomFilledButton(
-                      title: "Next",
-                      onTap: () {
-                        showModalBottomSheet(
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (context) => preview(),
-                        );
-                      },
-                    ),
+                    child: ref.watch(addContestEntryControllerProvider).when(
+                          data: (data) => CustomFilledButton(
+                            title: "Next",
+                            onTap: addContestEntry,
+                          ),
+                          error: (error, stackTrace) => CustomFilledButton(
+                            title: "Next",
+                            onTap: addContestEntry,
+                          ),
+                          loading: () => const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
                   ),
                 ],
               ),
