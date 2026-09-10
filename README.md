@@ -1,16 +1,46 @@
-# onefan_app
+# 1FAN - F1 Fantasy App
 
-A new Flutter project.
+1FAN is a Formula 1 fantasy sports application where users can
+participate in race-based contests, predict driver finishing positions,
+select the fastest-lap driver, and track their results.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- 🏎️ F1 race calendar
+  - View all, live, upcoming, and completed races
+  - Search races by name
+  - View circuit and race information
 
-A few resources to get you started if this is your first Flutter project:
+- 🏆 Fantasy contests
+  - Browse available contests
+  - Join race-specific contests
+  - View contest details and entry information
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- 🎯 Driver predictions
+  - Rank drivers based on predicted finishing position
+  - Select a fastest-lap driver
+  - Review predictions before submission
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- 📊 Results & Leaderboards
+  - Track contest points
+  - View rankings based on performance
+
+- 👤 User profile
+  - View user-specific contest information
+
+## Tech Stack
+
+- Flutter
+- Dart
+- Supabase Auth
+- PostgreSQL
+- Spring Boot
+- REST APIs
+
+## Related Repository
+
+- [1FAN Backend](https://github.com/1fanofficial/onefan_backend)
+
+## Demo
+
+▶️ [Watch the 1FAN App Demo](https://drive.google.com/file/d/1Oz0fmimAKaPoaEJrIR83Qj9SxA68yPvr/view?usp=sharing)
