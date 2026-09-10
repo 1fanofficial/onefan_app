@@ -4,6 +4,14 @@
 participate in race-based contests, predict driver finishing positions,
 select the fastest-lap driver, and track their results.
 
+## Related Repository
+
+- [1FAN Backend](https://github.com/1fanofficial/onefan_backend)
+
+## Demo
+
+▶️ [Watch the 1FAN App Demo](https://drive.google.com/file/d/1Oz0fmimAKaPoaEJrIR83Qj9SxA68yPvr/view?usp=sharing)
+
 ## Features
 
 - 🏎️ F1 race calendar
@@ -37,10 +45,3 @@ select the fastest-lap driver, and track their results.
 - Spring Boot
 - REST APIs
 
-## Related Repository
-
-- [1FAN Backend](https://github.com/1fanofficial/onefan_backend)
-
-## Demo
-
-▶️ [Watch the 1FAN App Demo](https://drive.google.com/file/d/1Oz0fmimAKaPoaEJrIR83Qj9SxA68yPvr/view?usp=sharing)
